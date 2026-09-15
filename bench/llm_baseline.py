@@ -10,17 +10,23 @@ correct track structure -> full-gen; else template-first.
 Known-benign normalisation (recorded in docs/llm-baseline.md): media paths in
 the model's output are re-pointed by basename onto the local DNxHR fixtures.
 Media resolution is not the skill under test; cut-point fidelity is.
+
+Providers: ollama (local) | cloud (OpenAI-compatible chat completions:
+GLM/Z.ai, MiniMax).
 """
 
 import argparse
 import json
 import pathlib
 import re
+import sys
 import tempfile
 import time
 import urllib.request
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO / "core"))
+
 from otio_kit.emit_otio import EmitError, emit, write_otio
 from otio_kit.media import MediaMissingError, resolve_media
 from otio_kit.spec import SpecError, load_spec
@@ -54,6 +60,44 @@ def ollama_generate(base_url: str, model: str, prompt: str, num_ctx: int = 8192)
         "prompt_tokens": payload.get("prompt_eval_count", 0),
         "output_tokens": payload.get("eval_count", 0),
         "eval_s": round(payload.get("eval_duration", 0) / 1e9, 2),
+    }
+
+
+def cloud_generate(base_url: str, api_path: str, model: str, api_key: str,
+                   prompt: str, max_tokens: int = 4096, extra=None):
+    """OpenAI-compatible chat completions (GLM/Z.ai, MiniMax)."""
+    body_dict = {
+        "model": model,
+        "messages": [
+            {"role": "system", "content": SYSTEM},
+            {"role": "user", "content": prompt},
+        ],
+        "temperature": 0,
+        "max_tokens": max_tokens,
+        "stream": False,
+    }
+    if extra:
+        body_dict.update(extra)
+    body = json.dumps(body_dict).encode()
+    req = urllib.request.Request(
+        base_url.rstrip("/") + api_path, data=body,
+        headers={"Content-Type": "application/json",
+                 "Authorization": f"Bearer {api_key}"},
+    )
+    t0 = time.time()
+    with urllib.request.urlopen(req, timeout=900) as resp:
+        payload = json.loads(resp.read())
+    wall = time.time() - t0
+    message = payload["choices"][0]["message"]
+    text = message.get("content") or ""
+    usage = payload.get("usage", {})
+    details = usage.get("completion_tokens_details") or {}
+    return text, {
+        "wall_s": round(wall, 2),
+        "prompt_tokens": usage.get("prompt_tokens", 0),
+        "output_tokens": usage.get("completion_tokens", 0),
+        "reasoning_tokens": details.get("reasoning_tokens", 0),
+        "finish_reason": payload["choices"][0].get("finish_reason"),
     }
 
 
@@ -134,7 +178,17 @@ def diff_metrics(golden_json: dict, out_json: dict, fps: int = 24, tol: int = 2)
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
+    ap.add_argument("--provider", choices=["ollama", "cloud"], default="ollama")
     ap.add_argument("--base-url", default="http://127.0.0.1:11434")
+    ap.add_argument("--api-path", default="/chat/completions",
+                    help="cloud: path appended to base URL "
+                         "(MiniMax: /text/chatcompletion_v2)")
+    ap.add_argument("--api-key-env", default="API_KEY",
+                    help="cloud: env var holding the API key")
+    ap.add_argument("--max-tokens", type=int, default=4096)
+    ap.add_argument("--extra-body", default="",
+                    help="cloud: JSON merged into the request body "
+                         '(e.g. \'{"reasoning_split": true}\')')
     ap.add_argument("--brief",
                     default="/home/oc/tmp/resources/research/cutlist-p0/specimen/brief.md")
     ap.add_argument("--out", default=None, help="write result JSON here")
@@ -152,12 +206,24 @@ def main():
         "Output the YAML document now. Remember: no prose, no fences."
     )
 
-    text, usage = ollama_generate(args.base_url, args.model, prompt, args.num_ctx)
+    if args.provider == "cloud":
+        import os
+        key = os.environ.get(args.api_key_env)
+        if not key:
+            print(f"error: env var {args.api_key_env} is not set", file=sys.stderr)
+            return 2
+        extra = json.loads(args.extra_body) if args.extra_body else None
+        text, usage = cloud_generate(args.base_url, args.api_path, args.model,
+                                     key, prompt, args.max_tokens, extra)
+    else:
+        text, usage = ollama_generate(args.base_url, args.model, prompt, args.num_ctx)
+
     yaml_text = extract_yaml(text)
     normalized = normalize_media(yaml_text, fixture_dir)
 
     result = {
         "model": args.model,
+        "provider": args.provider,
         "usage": usage,
         "raw_response_chars": len(text),
         "yaml_extracted": bool(yaml_text),
@@ -186,7 +252,8 @@ def main():
     print(json.dumps(result, indent=1))
     if args.out:
         pathlib.Path(args.out).write_text(json.dumps(result, indent=1))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
