@@ -30,5 +30,8 @@ Homepage = "https://github.com/Egnatia-OC/otio-kit"
 [tool.setuptools.packages.find]
 where = ["core"]
 
+[tool.setuptools.package-data]
+otio_kit = ["schema/*.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
