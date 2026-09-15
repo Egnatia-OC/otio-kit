@@ -1,2 +1,0 @@
-[console_scripts]
-otio-kit = otio_kit.cli:main
