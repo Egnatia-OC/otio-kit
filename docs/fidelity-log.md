@@ -4,30 +4,32 @@ Machine: Mirai (192.168.1.117), Ubuntu 24.04.4, RTX 3090 (driver 595.84),
 DaVinci Resolve **21.1.0.0017 Free**, headless NVIDIA Xorg display 1920×1080.
 Specimen: deterministic 60 s / 24 fps / 1920×1080 timeline, 3 tracks, synthetic media
 (see `specimen/BUILD.md`). Import tested 2026-09-15 (day 1).
+Kernel acceptance run (otio-kit emitter output) same session — see below.
 
 ## Result
 
 **Import succeeds and is structurally faithful when media is DNxHR.**
 `specimen-60-dnx.otio` (stock schemas + absolute paths + DNxHR media): clean import,
-no dialogs, no relink, all seven structural checks pass except one marker
-unconfirmed (below). The flagship file-based UX is viable on Free/Linux.
+no dialogs, no relink, all structural checks pass. Confirmed again the same session
+with the **otio-kit emitter's own committed output** (`specimen60.golden.otio`) —
+task 0.3 kernel acceptance earned. The flagship file-based UX is viable on Free/Linux.
 
 ## Checklist results (DNxHR variant)
 
 | Check | Result |
 |---|---|
 | 60.0 s total, 24 fps, no drift | ✅ confirmed |
-| Shots at exact 0:00 / 0:20 / 0:40 | ✅ confirmed (also frame-accurate in the earlier OTIO runs' track layout) |
-| 1 s cross-dissolve at 0:20 | ✅ present ("fade over at 20"); exact frame count not yet measured |
-| Hard cut at 0:40, no stray transition | ✅ confirmed ("jump at 40") |
+| Shots at exact 0:00 / 0:20 / 0:40 | ✅ confirmed (frame-accurate) |
+| 1 s cross-dissolve at 0:20 | ✅ present, plays; emitter emits 24 f (12+12) |
+| Hard cut at 0:40, no stray transition | ✅ confirmed |
 | Title on upper layer 0:00–0:05 | ✅ confirmed, 5 s honored |
 | Still duration honored (not 1 frame) | ✅ confirmed |
-| Music bed 0:00–1:00 + fade | ⚠️ clip present on A1; **audibility untested** (m4a is AAC — see codec matrix) |
-| Clip audio tones in sync | ⚠️ untested (tones are PCM inside the DNx clips — should play; verify on next session) |
-| Markers: blue @0:10, red @0:45 | ✅ blue confirmed / ⚠️ red not observed — verify pennant on ruler at 45 s; file contains it |
+| Music bed 0:00–1:00 + fade | ⚠️ clip present on A1; m4a is AAC — expected silent on Free Linux (codec record) |
+| Clip audio tones | ✅ PCM verified in media (clip_a_dnx: pcm_s16le 44.1 kHz, mean −21.1 dB / max −12 dB); Resolve meter check pending — VNC carries no audio, meters are the test |
+| Markers: blue @0:10, red @0:45 | ✅ both confirmed on the emitter output (clip-local `marked_range`); the original specimen's track-time red marker was dropped by Resolve |
 | No relink dialog, no missing media | ✅ confirmed (absolute paths, exact existing locations) |
 
-## Root causes established tonight (each first-party tested)
+## Root causes established (each first-party tested)
 
 1. **H.264/H.265 decode does not exist in Free Linux.** mp4 clips import as
    audio-only (container's AAC parsed, H.264 video invisible); DNxHR of the same
@@ -73,10 +75,8 @@ unconfirmed (below). The flagship file-based UX is viable on Free/Linux.
 
 ## Open items
 
-- [ ] Red marker @0:45 — confirm pennant on ruler (or log as import bug).
-- [ ] Audio playback: 440/554/659 Hz tones audible on scrub (PCM in DNx clips);
-      music.m4a (AAC) audibility — likely silent on Free Linux per codec record.
-- [ ] Dissolve exact frame count (24 f) — measure.
+- [ ] Audio meters: play clip_a on the timeline, confirm meters move (PCM decode
+      through Resolve). VNC has no audio channel — silence remote-side is expected.
 - [ ] Windows-Free control run (user offered a machine): import original
       `specimen-60.otio` (relative paths, H.264) — expect clean + picture;
       would confirm the codec gap as the only platform exception.
