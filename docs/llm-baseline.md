@@ -5,10 +5,11 @@ API, measure cut-point accuracy vs the hand-authored golden. Record models,
 prompts, diffs, costs. Gate: >=90% cut points within +/-2 frames and correct
 track structure → full-gen; else template-first."
 
-**Completed day 1 (2026-09-15): gate PASSED on local hardware and on two cloud
-models. All capable models pass full-gen; the sub-1B control fails, confirming
-the gate discriminates. Verdict: full-gen with a mandatory human review step;
-template-first as fallback for weak models and messy briefs.**
+**Completed day 1 (2026-09-15): gate PASSED on local hardware and on all four
+cloud models tested — the entire current MiniMax M-series and GLM-5.3-Flash.
+The sub-1B control fails, confirming the gate discriminates. Verdict: full-gen
+with a mandatory human review step; template-first as fallback for weak models
+and messy briefs.**
 
 ## Method
 
@@ -38,14 +39,15 @@ what media-resolution is *for*.)
 |---|---|---|---|---|---|---|---|---|
 | qwen3.8:27b | Ollama, local (RTX 3090) | ok | 5/5 (100%) | match | **full-gen** | 30.3 s | 1,626 / 2,265 | $0 |
 | **GLM-5.3-Flash** | cloud (Z.ai) | ok | 5/5 (100%) | match | **full-gen** | 32.2 s | 1,480 / 1,354 (incl. 1,123 reasoning) | ~$0.0009 |
+| **MiniMax-M2** | cloud (MiniMax, oldest current M-series) | ok | 5/5 (100%) | match | **full-gen** | 43.2 s | 1,490 / 1,605 | ~$0.0024 |
 | **MiniMax-M2.7** | cloud (MiniMax) | ok | 5/5 (100%) | match | **full-gen** | 44.8 s | 1,490 / 2,775 | ~$0.0038 |
 | qwen3:0.6b | Ollama, local (control) | FAILED (invalid YAML — indentation collapse) | — | — | template-first | 18.1 s | 1,516 / 528 | $0 |
 
-Costs from measured token counts × official list prices
-(docs.z.ai, 2026-09-15: GLM-5.3-Flash $0.15/$0.50 per M; MiniMax docs:
-M2.7 $0.30/$1.20 per M). **A full timeline compile costs a fraction of a
-cent per brief** — the per-render LLM tax the pricing rules forbid is
-structurally tiny; the real cost driver is human review time.
+Costs from measured token counts × official list prices (docs.z.ai and
+MiniMax pay-as-you-go pages, 2026-09-15: GLM-5.3-Flash $0.15/$0.50 per M;
+MiniMax M-series $0.30/$1.20 per M). **A full timeline compile costs a
+fraction of a cent per brief** — the per-render LLM tax the pricing rules
+forbid is structurally tiny; the real cost driver is human review time.
 
 ## Per-model notes
 
@@ -55,6 +57,11 @@ structurally tiny; the real cost driver is human review time.
 - **GLM-5.3-Flash (Z.ai coding endpoint)**: perfect spec, first try. Hybrid
   reasoner: 1,123 of its 1,354 output tokens were thinking; final answer was
   clean, fence-free YAML. 32 s wall includes API round-trip.
+- **MiniMax-M2 (oldest M-series)**: perfect spec. The gate floor is *above*
+  every model in MiniMax's current LLM lineup (M2 → M2.7, all $0.30/$1.20 per
+  M). The real capability boundary lies between small local models (0.6b
+  fails) and M2-class cloud models; pinning it is a future local-scaling
+  benchmark (4B–14B on the 3090), not a gap in this table.
 - **MiniMax-M2.7**: perfect spec once configured correctly. API quirk (not a
   model failure): without `reasoning_split: true` its thinking consumed the
   4,096-token budget and returned empty `content`; with the split flag and a
@@ -129,7 +136,9 @@ markers:
 - Single sample per model at temperature 0 (per plan scope); production will
   add retries and a schema-repair pass.
 - Cloud rows ran through the standard API endpoints (Z.ai coding endpoint for
-  GLM; MiniMax `chatcompletion_v2` with `reasoning_split` for M2.7).
+  GLM; MiniMax `chatcompletion_v2` with `reasoning_split` for M-series).
+- MiniMax's current LLM table is price-flat ($0.30/$1.20 per M across
+  M2/M2.1/M2.5/M2.7); cheaper tiers are not offered in pay-as-you-go.
 - Metric counts clip starts per track (5 total on the specimen). A richer
   metric (transitions, fades, markers) is a follow-up; structure equality and
   the compile gate already cover most of it.
