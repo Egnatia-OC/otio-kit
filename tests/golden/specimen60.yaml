@@ -1,0 +1,37 @@
+# Task 0.2 fidelity specimen, expressed in spec v0.
+# Compiles to the timeline that imported cleanly into Resolve Free 21.1
+# (see docs/fidelity-log.md). Media fixtures are DNxHR: Linux-Free cannot
+# decode H.264.
+spec_version: 0
+name: specimen-60
+fps: 24
+media:
+  clip_a: media/clip_a_dnx.mov
+  clip_b: media/clip_b_dnx.mov
+  clip_c: media/clip_c_dnx.mov
+  music: media/music.m4a
+  title: media/title.png
+timeline:
+  audio:
+    - track: A1
+      clips:
+        - media: music
+          duration: 60.0
+          fade_in: 2.0
+  video:
+    - track: V1
+      clips:
+        - media: clip_a
+          duration: 20.0
+        - media: clip_b
+          duration: 20.0
+          transition_in: {type: dissolve, duration: 1.0}
+        - media: clip_c
+          duration: 20.0
+    - track: V2
+      clips:
+        - media: title
+          duration: 5.0
+markers:
+  - {time: 10.0, color: blue, name: beat-1}
+  - {time: 45.0, color: red, name: outro}

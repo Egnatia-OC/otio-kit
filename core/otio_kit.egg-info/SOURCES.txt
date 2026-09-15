@@ -1,0 +1,15 @@
+LICENSE
+README.md
+pyproject.toml
+core/otio_kit/__init__.py
+core/otio_kit/cli.py
+core/otio_kit/emit_otio.py
+core/otio_kit/media.py
+core/otio_kit/spec.py
+core/otio_kit.egg-info/PKG-INFO
+core/otio_kit.egg-info/SOURCES.txt
+core/otio_kit.egg-info/dependency_links.txt
+core/otio_kit.egg-info/entry_points.txt
+core/otio_kit.egg-info/requires.txt
+core/otio_kit.egg-info/top_level.txt
+tests/test_roundtrip.py

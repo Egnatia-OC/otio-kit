@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://otio-kit.dev/schema/spec-v0.json",
+  "title": "cutlist spec v0",
+  "description": "Timeline brief for the otio-kit compiler. Scope frozen from the Free 21.1 Linux fidelity safe-set (docs/spec-scope-v0.md).",
+  "type": "object",
+  "required": ["spec_version", "name", "fps", "media", "timeline"],
+  "additionalProperties": false,
+  "properties": {
+    "spec_version": {"const": 0},
+    "name": {"type": "string", "minLength": 1, "description": "Timeline name as it appears after import."},
+    "fps": {"type": "number", "exclusiveMinimum": 0},
+    "media": {
+      "type": "object",
+      "description": "Logical name -> path relative to this spec file. Every path must exist at compile time (loud failure otherwise).",
+      "minProperties": 1,
+      "additionalProperties": {"type": "string", "minLength": 1}
+    },
+    "timeline": {
+      "type": "object",
+      "required": ["video"],
+      "additionalProperties": false,
+      "properties": {
+        "video": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/videoTrack"}},
+        "audio": {"type": "array", "items": {"$ref": "#/$defs/audioTrack"}}
+      }
+    },
+    "markers": {"type": "array", "items": {"$ref": "#/$defs/marker"}}
+  },
+  "$defs": {
+    "videoTrack": {
+      "type": "object",
+      "required": ["track", "clips"],
+      "additionalProperties": false,
+      "properties": {
+        "track": {"type": "string", "minLength": 1},
+        "clips": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/videoClip"}}
+      }
+    },
+    "audioTrack": {
+      "type": "object",
+      "required": ["track", "clips"],
+      "additionalProperties": false,
+      "properties": {
+        "track": {"type": "string", "minLength": 1},
+        "clips": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/audioClip"}}
+      }
+    },
+    "videoClip": {
+      "type": "object",
+      "required": ["media", "duration"],
+      "additionalProperties": false,
+      "properties": {
+        "media": {"type": "string", "minLength": 1, "description": "Key into the media map."},
+        "duration": {"type": "number", "exclusiveMinimum": 0},
+        "transition_in": {"$ref": "#/$defs/transition"}
+      }
+    },
+    "audioClip": {
+      "type": "object",
+      "required": ["media", "duration"],
+      "additionalProperties": false,
+      "properties": {
+        "media": {"type": "string", "minLength": 1},
+        "duration": {"type": "number", "exclusiveMinimum": 0},
+        "fade_in": {"type": "number", "minimum": 0}
+      }
+    },
+    "transition": {
+      "type": "object",
+      "required": ["type", "duration"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {"enum": ["dissolve"]},
+        "duration": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "marker": {
+      "type": "object",
+      "required": ["time", "color"],
+      "additionalProperties": false,
+      "properties": {
+        "time": {"type": "number", "minimum": 0},
+        "color": {"enum": ["blue", "red", "green", "yellow", "pink", "purple", "cyan", "white"]},
+        "name": {"type": "string"}
+      }
+    }
+  }
+}

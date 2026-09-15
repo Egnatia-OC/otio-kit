@@ -1,0 +1,6 @@
+apps/
+packs/
+.venv/
+__pycache__/
+*.pyc
+scratch/

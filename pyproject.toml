@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "otio-kit"
+version = "0.0.1.dev0"
+description = "Compile timeline briefs into files that import cleanly into DaVinci Resolve Free - no scripting bridge, no Studio required."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "AGPL-3.0-only"}
+authors = [{name = "Egnatia OC"}]
+keywords = ["opentimelineio", "otio", "davinci-resolve", "timeline", "video-editing"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Video Developers",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Programming Language :: Python :: 3",
+    "Topic :: Multimedia :: Video :: Non-Linear Editor",
+]
+dependencies = ["opentimelineio>=0.17,<0.19", "pyyaml>=6.0", "jsonschema>=4.17"]
+
+[project.scripts]
+otio-kit = "otio_kit.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Egnatia-OC/otio-kit"
+
+[tool.setuptools.packages.find]
+where = ["core"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
