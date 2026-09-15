@@ -25,7 +25,7 @@ task 0.3 kernel acceptance earned. The flagship file-based UX is viable on Free/
 | Title on upper layer 0:00–0:05 | ✅ confirmed, 5 s honored |
 | Still duration honored (not 1 frame) | ✅ confirmed |
 | Music bed 0:00–1:00 + fade | ⚠️ clip present on A1; m4a is AAC — expected silent on Free Linux (codec record) |
-| Clip audio tones | ✅ PCM verified in media (clip_a_dnx: pcm_s16le 44.1 kHz, mean −21.1 dB / max −12 dB); Resolve meter check pending — VNC carries no audio, meters are the test |
+| Clip audio tones | ✅ PCM verified in media (clip_a_dnx: pcm_s16le 44.1 kHz, mean −21.1 dB / max −12 dB); playback-metering structurally unavailable (no sound card — see open items) |
 | Markers: blue @0:10, red @0:45 | ✅ both confirmed on the emitter output (clip-local `marked_range`); the original specimen's track-time red marker was dropped by Resolve |
 | No relink dialog, no missing media | ✅ confirmed (absolute paths, exact existing locations) |
 
@@ -62,6 +62,9 @@ task 0.3 kernel acceptance earned. The flagship file-based UX is viable on Free/
   installed for the bundled Qt xcb plugin (installer does not check).
 - A GPU-backed display (headless NVIDIA Xorg with `UseDisplayDevice None` works;
   xrandr-only virtual monitors and Xvfb-class software GL do not satisfy Resolve).
+- No sound card on the headless box (`aplay -l`: no soundcards; PipeWire: zero
+  sinks) — Resolve's audio engine cannot bind; meters stay flat by structure.
+  Audio decode checks must go through render/export, not meters.
 
 ## Product implications (for /plan; build does not write SPEC)
 
@@ -75,8 +78,8 @@ task 0.3 kernel acceptance earned. The flagship file-based UX is viable on Free/
 
 ## Open items
 
-- [ ] Audio meters: play clip_a on the timeline, confirm meters move (PCM decode
-      through Resolve). VNC has no audio channel — silence remote-side is expected.
+- [ ] In-Resolve audio decode: definitive check = render timeline audio → WAV →
+      ffprobe (optional; PCM decode is low-risk, media already verified).
 - [ ] Windows-Free control run (user offered a machine): import original
       `specimen-60.otio` (relative paths, H.264) — expect clean + picture;
       would confirm the codec gap as the only platform exception.
