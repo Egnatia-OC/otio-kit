@@ -16,15 +16,14 @@ import argparse
 import json
 import pathlib
 import re
-import sys
 import tempfile
 import time
 import urllib.request
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
-from otio_kit.emit_otio import EmitError, emit, write_otio  # noqa: E402
-from otio_kit.media import MediaMissingError, resolve_media  # noqa: E402
-from otio_kit.spec import SpecError, load_spec  # noqa: E402
+from otio_kit.emit_otio import EmitError, emit, write_otio
+from otio_kit.media import MediaMissingError, resolve_media
+from otio_kit.spec import SpecError, load_spec
 
 SYSTEM = (
     "You are a timeline compiler. Read the editing brief and output ONLY a "
@@ -59,7 +58,7 @@ def ollama_generate(base_url: str, model: str, prompt: str, num_ctx: int = 8192)
 
 
 def extract_yaml(text: str) -> str:
-    fence = re.search(r"```(?:ya?ml)?\s*\n(.*?)```", text, re.S)
+    fence = re.search(r"```(?:ya?ml)?\s*\n(.*?)```", text, re.DOTALL)
     if fence:
         return fence.group(1).strip()
     lines = text.splitlines()
@@ -103,7 +102,7 @@ def collect_cuts(tl_json: dict, fps: int = 24):
         points = []
         for child in track["children"]:
             if child["OTIO_SCHEMA"].startswith("Clip"):
-                points.append(int(round(t * fps)))
+                points.append(round(t * fps))
                 rt = child["source_range"]["duration"]
                 t += rt["value"] / rt["rate"]
         cuts[name] = points
