@@ -12,7 +12,7 @@ Resolve 21.1 moved Python scripting to Studio and Linux-Free has never decoded
 H.264. What still works everywhere: **timeline files**. `otio-kit` compiles a
 small YAML brief into OTIO that imports cleanly — verified first-party on Free
 21.1 Linux, with the breakage list and safe-set published in
-[`docs/fidelity-log.md`](docs/fidelity-log.md) and
+[`docs/fidelity-log.md`](docs/fidelity-log.md), [`docs/console-status.md`](docs/console-status.md), and
 [`docs/spec-scope-v0.md`](docs/spec-scope-v0.md).
 
 ## Install
