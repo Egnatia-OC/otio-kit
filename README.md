@@ -1,5 +1,7 @@
 # otio-kit
 
+![ci](https://github.com/Egnatia-OC/otio-kit/actions/workflows/ci.yml/badge.svg)
+
 Compile timeline briefs into files that import cleanly into **DaVinci Resolve
 Free** — no scripting bridge, no Studio required.
 
