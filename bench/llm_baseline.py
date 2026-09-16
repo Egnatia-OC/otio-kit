@@ -190,7 +190,7 @@ def main():
                     help="cloud: JSON merged into the request body "
                          '(e.g. \'{"reasoning_split": true}\')')
     ap.add_argument("--brief",
-                    default="/home/oc/tmp/resources/research/cutlist-p0/specimen/brief.md")
+                    default=str(REPO / "specimen" / "brief.md"))
     ap.add_argument("--out", default=None, help="write result JSON here")
     ap.add_argument("--num-ctx", type=int, default=8192)
     args = ap.parse_args()

@@ -10,9 +10,9 @@ import pathlib
 
 import pytest
 import yaml
-from opentimelineio import adapters
+from opentimelineio import adapters, schema
 from opentimelineio import opentime as ot
-from otio_kit.emit_otio import EmitError, emit
+from otio_kit.emit_otio import EmitError, _attach_markers, emit
 from otio_kit.media import MediaMissingError, resolve_media
 from otio_kit.spec import SpecError, load_spec
 
@@ -29,9 +29,27 @@ def _compile(yaml_path: pathlib.Path, out_path: pathlib.Path):
     return json.loads(out_path.read_text())
 
 
+def _normalize_media(node):
+    """Map every target_url to a repo-relative __MEDIA__/ name so the golden
+    comparison is portable across machines and OSes (paths are the only
+    machine-specific content in the output)."""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            if k == "target_url" and isinstance(v, str):
+                node[k] = "__MEDIA__/" + v.replace("\\", "/").rsplit(
+                    "tests/golden/media/", 1)[-1]
+            else:
+                _normalize_media(v)
+    elif isinstance(node, list):
+        for v in node:
+            _normalize_media(v)
+
+
 def test_compile_matches_golden(tmp_path):
     out = _compile(GOLDEN_YAML, tmp_path / "out.otio")
     golden = json.loads(GOLDEN_OTIO.read_text())
+    _normalize_media(out)
+    _normalize_media(golden)
     assert out == golden, "emitter output drifted from the committed golden file"
 
 
@@ -52,7 +70,7 @@ def test_roundtrip_structure(tmp_path):
     ]
     for c in clips:
         assert c.source_range.duration == ot.RationalTime(20 * fps, fps)
-        assert c.media_reference.target_url.startswith("/")
+        assert pathlib.Path(c.media_reference.target_url).is_absolute()
 
     trans = [x for x in v1 if x.schema_name() == "Transition"]
     assert len(trans) == 1
@@ -132,3 +150,96 @@ def test_marker_out_of_range_is_loud():
     media = resolve_media(spec)
     with pytest.raises(EmitError, match="beyond the first video track"):
         emit(spec, media)
+
+
+def _spec_from_dict(tmp_path, data: dict):
+    p = tmp_path / "spec.yaml"
+    p.write_text(yaml.safe_dump(data))
+    return load_spec(p)
+
+
+def test_subframe_clip_duration_is_loud(tmp_path):
+    spec = _spec_from_dict(tmp_path, {
+        "spec_version": 0, "name": "x", "fps": 24,
+        "media": {"a": "media/a.mov"},
+        "timeline": {"video": [
+            {"track": "V1", "clips": [{"media": "a", "duration": 0.02}]}
+        ]},
+    })
+    with pytest.raises(EmitError, match="rounds to 0 frame"):
+        emit(spec, {"a": str(tmp_path / "media" / "a.mov")})
+
+
+def test_subframe_transition_is_loud(tmp_path):
+    spec = _spec_from_dict(tmp_path, {
+        "spec_version": 0, "name": "x", "fps": 24,
+        "media": {"a": "media/a.mov"},
+        "timeline": {"video": [
+            {"track": "V1", "clips": [
+                {"media": "a", "duration": 1.0},
+                {"media": "a", "duration": 1.0,
+                 "transition_in": {"type": "dissolve", "duration": 0.02}},
+            ]}
+        ]},
+    })
+    with pytest.raises(EmitError, match="minimum is 2 frames"):
+        emit(spec, {"a": str(tmp_path / "media" / "a.mov")})
+
+
+def test_fractional_fps_quantizes_per_clip(tmp_path):
+    spec = _spec_from_dict(tmp_path, {
+        "spec_version": 0, "name": "x", "fps": 23.976,
+        "media": {"a": "media/a.mov"},
+        "timeline": {"video": [
+            {"track": "V1", "clips": [
+                {"media": "a", "duration": 20.0},
+                {"media": "a", "duration": 20.0},
+                {"media": "a", "duration": 20.0},
+            ]}
+        ]},
+    })
+    tl = emit(spec, {"a": str(tmp_path / "media" / "a.mov")})
+    v1 = next(t for t in tl.tracks if t.kind == "Video")
+    clips = [c for c in v1 if c.schema_name() == "Clip"]
+    # 20 s at 23.976 = 479.52 frames -> 480 per clip (documented quantization)
+    for c in clips:
+        assert c.source_range.duration == ot.RationalTime(480, 23.976)
+    total = sum(c.source_range.duration.value for c in clips)
+    assert total == 1440  # 60.06 s nominal 60.0 s: the sum IS the duration
+
+
+def test_marker_on_cut_boundary_goes_to_starting_clip(tmp_path):
+    data = yaml.safe_load(GOLDEN_YAML.read_text())
+    data["markers"].append({"time": 20.0, "color": "green", "name": "cut-edge"})
+    spec = _spec_from_dict(tmp_path, data)
+    media = {k: str(GOLDEN_DIR / p) for k, p in data["media"].items()}
+    tl = emit(spec, media)
+    v1 = next(t for t in tl.tracks if t.kind == "Video")
+    clips = [c for c in v1 if c.schema_name() == "Clip"]
+    carriers = [c for c in clips
+                if any(m.name == "cut-edge" for m in c.markers)]
+    assert [c.name for c in carriers] == ["clip_b_dnx.mov"]
+    m = next(m for m in carriers[0].markers if m.name == "cut-edge")
+    assert m.marked_range.start_time == ot.RationalTime(0, 24)
+
+
+def test_duplicate_track_names_are_loud(tmp_path):
+    spec = _spec_from_dict(tmp_path, {
+        "spec_version": 0, "name": "x", "fps": 24,
+        "media": {"a": "media/a.mov"},
+        "timeline": {
+            "video": [
+                {"track": "V1", "clips": [{"media": "a", "duration": 1.0}]},
+                {"track": "V1", "clips": [{"media": "a", "duration": 1.0}]},
+            ]
+        },
+    })
+    with pytest.raises(EmitError, match="duplicate track name"):
+        emit(spec, {"a": str(tmp_path / "media" / "a.mov")})
+
+
+def test_zero_markers_skip_video_track_guard():
+    tl = schema.Timeline(name="audio-only")
+    tl.tracks.append(schema.Track(name="A1", kind="Audio"))
+    _attach_markers(tl, [], 24.0)  # must not raise
+

@@ -40,6 +40,15 @@ def emit(spec, media: dict[str, str]) -> schema.Timeline:
     """Build a Timeline from a validated Spec and resolved media paths."""
     fps = spec.fps
     timeline = schema.Timeline(name=spec.name)
+    names = [t["track"] for t in spec.timeline.get("audio", [])] + [
+        t["track"] for t in spec.timeline.get("video", [])]
+    dupes = sorted({n for n in names if names.count(n) > 1})
+    if dupes:
+        raise EmitError(
+            f"duplicate track name(s): {', '.join(dupes)} — "
+            "track names must be unique"
+        )
+
 
     # Track order mirrors the proven-known-good specimen: audio first, then
     # video in declared order.
@@ -68,6 +77,11 @@ def emit(spec, media: dict[str, str]) -> schema.Timeline:
                 tr = clip_spec.get("transition_in")
                 if tr:
                     frames = round(tr["duration"] * fps)
+                    if frames < 2:
+                        raise EmitError(
+                            f"transition duration {tr['duration']}s rounds to "
+                            f"{frames} frame(s) at {fps} fps; minimum is 2 frames"
+                        )
                     half = frames // 2
                     track.append(
                         schema.Transition(
@@ -90,6 +104,9 @@ def _attach_markers(timeline: schema.Timeline, marker_specs: list, fps: float) -
     marked_range is clip-local (valid inside the carrying clip). Track order
     mirrors the proven specimen layout: Resolve imports clip-level markers.
     """
+    if not marker_specs:
+        return
+
     video_tracks = [t for t in timeline.tracks
                     if isinstance(t, schema.Track) and t.kind == "Video"]
     if not video_tracks:
@@ -105,7 +122,7 @@ def _attach_markers(timeline: schema.Timeline, marker_specs: list, fps: float) -
         for clip in clips:
             clip_len = clip.source_range.duration
             clip_end = track_time + clip_len
-            if track_time <= target <= clip_end:
+            if track_time <= target < clip_end:
                 clip_local = clip.source_range.start_time + (target - track_time)
                 clip.markers.append(
                     schema.Marker(
@@ -125,11 +142,18 @@ def _attach_markers(timeline: schema.Timeline, marker_specs: list, fps: float) -
 
 def _make_clip(clip_spec: dict, media: dict[str, str], fps: float) -> schema.Clip:
     target = media[clip_spec["media"]]
+    frames = round(clip_spec["duration"] * fps)
+    if frames < 1:
+        raise EmitError(
+            f"clip '{pathlib.Path(target).name}' duration "
+            f"{clip_spec['duration']}s rounds to {frames} frame(s) at "
+            f"{fps} fps; minimum is {1.0 / fps:.4f}s (1 frame)"
+        )
     return schema.Clip(
         name=pathlib.Path(target).name,
         media_reference=schema.ExternalReference(target_url=target),
         source_range=ot.TimeRange(
-            ot.RationalTime(0, fps), _rt(clip_spec["duration"], fps)
+            ot.RationalTime(0, fps), ot.RationalTime(frames, fps)
         ),
     )
 

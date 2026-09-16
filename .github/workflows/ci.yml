@@ -2,15 +2,17 @@ name: ci
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     tags: ["*"]
   pull_request:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
+        os: [ubuntu-latest, windows-latest]
         python: ["3.10", "3.12"]
     steps:
       - uses: actions/checkout@v4

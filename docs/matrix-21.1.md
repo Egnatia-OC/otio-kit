@@ -3,8 +3,9 @@
 Machine: Mirai (192.168.1.117), Ubuntu 24.04.4, Ryzen 5 7600X, RTX 3090 (24 GB),
 DaVinci Resolve **21.1.0.0017 Free**. Tested 2026-09-14/15 (day 0-1 of the news cycle).
 Method: live GUI session on a headless NVIDIA Xorg display (`:5`, 1920×1080,
-`UseDisplayDevice None`), driven over VNC. Evidence screenshots: `t1-menu.xwd`,
-`t2-console.xwd` (to be pulled from `mirai:/tmp/`).
+`UseDisplayDevice None`), driven over VNC. Evidence screenshots captured
+2026-09-15 (`t1-menu.xwd`, `t2-console.xwd`) but not preserved (host `/tmp`
+cleared); re-capture pending — see `KNOWN-ISSUES.md`.
 
 Environment notes (setup findings, not matrix rows):
 - 21.1 Free installs and runs on Ubuntu 24.04 despite official Rocky-8.6-only list (R10 evidence).
