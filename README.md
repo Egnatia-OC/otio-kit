@@ -57,6 +57,22 @@ the timeline only.
 
 This project is not part of the OpenTimelineIO project (which it consumes).
 
+## Support the project
+
+otio-kit is free and stays free. The ongoing cost is the **per-release
+re-test cadence** — every new Resolve build gets re-imported and
+[`docs/fidelity-log.md`](docs/fidelity-log.md) updated. That's what patronage
+funds. No perks, no tiers, nothing to unlock.
+
+- **Patronage** — opens soon; the project is completing its business
+  registration and the checkout will appear here.
+- **Get notified** — an email list for the flagship launch and per-release
+  re-test announcements is being set up; the link lands here. Single-purpose,
+  unsubscribe anytime.
+
+Patronage is processed as a standard purchase (the project is a business, not
+a non-profit); nothing here is tax-deductible.
+
 ## Licence
 
 AGPL-3.0 — see `LICENSE`. Commercial dual licence: terms on request — open a

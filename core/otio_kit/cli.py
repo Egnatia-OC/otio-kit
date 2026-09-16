@@ -37,6 +37,21 @@ def _validate(args) -> int:
     return 0
 
 
+def _support(args) -> int:
+    print(
+        "otio-kit is a public record of what survives on DaVinci Resolve Free.\n"
+        "It is free and stays free.\n"
+        "\n"
+        "Project, docs, and the per-release fidelity log:\n"
+        "    https://github.com/Egnatia-OC/otio-kit\n"
+        "\n"
+        "Support the project (patronage for the re-test cadence — no perks,\n"
+        "no unlock) and get notified when the flagship ships:\n"
+        "    https://github.com/Egnatia-OC/otio-kit#support-the-project"
+    )
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         prog="otio-kit",
@@ -55,6 +70,10 @@ def main(argv=None) -> int:
     p_validate = sub.add_parser("validate", help="validate spec + media, no output")
     p_validate.add_argument("spec", help="spec YAML file")
     p_validate.set_defaults(func=_validate)
+    p_support = sub.add_parser("support",
+                               help="project, support, and updates")
+    p_support.set_defaults(func=_support)
+
 
     args = parser.parse_args(argv)
     return args.func(args)

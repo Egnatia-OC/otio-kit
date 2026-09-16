@@ -3,6 +3,16 @@
 Format: newest first. Spec semantics are frozen per `spec_version`
 (`docs/spec-scope-v0.md`); breaking spec changes bump `spec_version`.
 
+## 0.0.4 (2026-09-16)
+
+- Add `otio-kit support`: an opt-in command (listed in `--help`, only prints
+  when you run it — not a nag) that points to the project, the per-release
+  fidelity log, and the "Support the project" section. A persistent,
+  re-surfaced path to patronage and the notify list that survives `pip
+  upgrade` / `git pull`.
+- README gains a "Support the project" section (patronage framing + notify
+  list; the checkout opens once business registration completes).
+
 ## 0.0.3 (2026-09-16)
 
 - Reject dissolves that do not fit their clips: each half of the dissolve
