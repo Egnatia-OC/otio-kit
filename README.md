@@ -27,7 +27,8 @@ Or from source:
 
 ```
 git clone https://github.com/Egnatia-OC/otio-kit && cd otio-kit
-uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -e .
+uv venv --python 3.12
+uv pip install -e .
 ```
 
 ## Use
@@ -50,7 +51,9 @@ The committed media under `tests/golden/media/` are empty stubs: the golden
 suite proves emitter *determinism*, not import fidelity — import fidelity is
 the Resolve import run documented in
 [`docs/fidelity-log.md`](docs/fidelity-log.md). Regenerate the real specimen
-media with `specimen/build_specimen.py` (see `specimen/BUILD.md`).
+media from the recipe in [`specimen/BUILD.md`](specimen/BUILD.md) (ffmpeg
+synthesis, DNxHR transcode, `make_title.py`); `build_specimen.py` assembles
+the timeline only.
 
 This project is not part of the OpenTimelineIO project (which it consumes).
 

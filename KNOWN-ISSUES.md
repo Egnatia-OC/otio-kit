@@ -38,5 +38,6 @@ also live in `docs/fidelity-log.md`; this file is the defect/limitation log.
   `docs/spec-scope-v0.md`.
 - **Committed test media are empty stubs** — the golden suite proves emitter
   determinism, not import fidelity (that is the Resolve import run in
-  `docs/fidelity-log.md`). Regenerate real media with
-  `specimen/build_specimen.py`.
+  `docs/fidelity-log.md`). Regenerate the real specimen media from the recipe
+  in `specimen/BUILD.md` (ffmpeg + DNxHR transcode + `make_title.py`);
+  `build_specimen.py` assembles the timeline only.
