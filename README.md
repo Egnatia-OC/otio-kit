@@ -40,10 +40,19 @@ Missing media fails loudly, listing every absent file in one pass. Never silent.
 ## Status
 
 Alpha. The emitter covers the v0 safe-set only (see
-[`docs/spec-scope-v0.md`](docs/spec-scope-v0.md)). Releases are tagged from
-day one; breaking spec changes bump `spec_version`.
+[`docs/spec-scope-v0.md`](docs/spec-scope-v0.md)); open items and known
+issues in [`KNOWN-ISSUES.md`](KNOWN-ISSUES.md). CI: ruff + pytest on Ubuntu
+and Windows, Python 3.10/3.12.
+
+The committed media under `tests/golden/media/` are empty stubs: the golden
+suite proves emitter *determinism*, not import fidelity — import fidelity is
+the Resolve import run documented in
+[`docs/fidelity-log.md`](docs/fidelity-log.md). Regenerate the real specimen
+media with `specimen/build_specimen.py` (see `specimen/BUILD.md`).
+
+This project is not part of the OpenTimelineIO project (which it consumes).
 
 ## Licence
 
-AGPL-3.0 — see `LICENSE`. Commercial licensing available at first request
-(contact via the repository).
+AGPL-3.0 — see `LICENSE`. Commercial dual licence: terms on request — open a
+GitHub issue labelled `licensing`.
