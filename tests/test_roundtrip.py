@@ -243,3 +243,58 @@ def test_zero_markers_skip_video_track_guard():
     tl.tracks.append(schema.Track(name="A1", kind="Audio"))
     _attach_markers(tl, [], 24.0)  # must not raise
 
+
+
+def test_transition_longer_than_clips_is_loud(tmp_path):
+    # 5 s dissolve (120 frames) between two 1 s clips (24 frames each):
+    # offsets of 60/60 would exceed the media on both sides
+    spec = _spec_from_dict(tmp_path, {
+        "spec_version": 0, "name": "x", "fps": 24,
+        "media": {"a": "media/a.mov"},
+        "timeline": {"video": [
+            {"track": "V1", "clips": [
+                {"media": "a", "duration": 1.0},
+                {"media": "a", "duration": 1.0,
+                 "transition_in": {"type": "dissolve", "duration": 5.0}},
+            ]}
+        ]},
+    })
+    with pytest.raises(EmitError, match="does not fit"):
+        emit(spec, {"a": str(tmp_path / "media" / "a.mov")})
+
+
+def test_transition_in_on_first_clip_is_loud(tmp_path):
+    # rejected at the spec layer (load_spec) before the emitter is reached
+    with pytest.raises(SpecError, match="nothing to transition from"):
+        _spec_from_dict(tmp_path, {
+            "spec_version": 0, "name": "x", "fps": 24,
+            "media": {"a": "media/a.mov"},
+            "timeline": {"video": [
+                {"track": "V1", "clips": [
+                    {"media": "a", "duration": 1.0,
+                     "transition_in": {"type": "dissolve", "duration": 0.5}},
+                    {"media": "a", "duration": 1.0},
+                ]}
+            ]},
+        })
+
+
+def test_transition_fitting_exactly_is_allowed(tmp_path):
+    # 2 s dissolve (48 frames: 24+24) against a 24-frame previous clip and a
+    # 48-frame next clip: equality is allowed, overflow is rejected
+    spec = _spec_from_dict(tmp_path, {
+        "spec_version": 0, "name": "x", "fps": 24,
+        "media": {"a": "media/a.mov"},
+        "timeline": {"video": [
+            {"track": "V1", "clips": [
+                {"media": "a", "duration": 1.0},
+                {"media": "a", "duration": 2.0,
+                 "transition_in": {"type": "dissolve", "duration": 2.0}},
+            ]}
+        ]},
+    })
+    tl = emit(spec, {"a": str(tmp_path / "media" / "a.mov")})
+    v1 = next(t for t in tl.tracks if t.kind == "Video")
+    tr = next(i for i in v1 if i.schema_name() == "Transition")
+    assert tr.in_offset == ot.RationalTime(24, 24)
+    assert tr.out_offset == ot.RationalTime(24, 24)

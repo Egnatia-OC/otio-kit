@@ -21,7 +21,11 @@ is stock OTIO schema; custom semantics travel in `metadata`.
 clips. At fractional fps (23.976, 29.97) the total may differ from the
 nominal duration by a few frames — that is the model, not drift to correct.
 Durations that round to 0 frames are rejected by the emitter (loud error);
-minimum clip is 1 frame, minimum transition 2 frames.
+minimum clip is 1 frame, minimum transition 2 frames. A dissolve must also
+*fit* its clips: each half must not exceed the quantized duration of the
+clip on its side (a clip may be fully consumed by a dissolve, but the
+offsets must never exceed the available media); a `transition_in` on the
+first clip of a track is rejected, since there is nothing to dissolve from.
 
 ## What v0 deliberately excludes
 

@@ -72,25 +72,41 @@ def emit(spec, media: dict[str, str]) -> schema.Timeline:
 
     for video_track in spec.timeline.get("video", []):
         track = schema.Track(name=video_track["track"], kind="Video")
+        prev_frames = 0
         for i, clip_spec in enumerate(video_track["clips"]):
-            if i > 0:
-                tr = clip_spec.get("transition_in")
-                if tr:
-                    frames = round(tr["duration"] * fps)
-                    if frames < 2:
-                        raise EmitError(
-                            f"transition duration {tr['duration']}s rounds to "
-                            f"{frames} frame(s) at {fps} fps; minimum is 2 frames"
-                        )
-                    half = frames // 2
-                    track.append(
-                        schema.Transition(
-                            name=f"{tr['type']}_{i}",
-                            in_offset=ot.RationalTime(half, fps),
-                            out_offset=ot.RationalTime(frames - half, fps),
-                            transition_type="SMPTE_Dissolve",
-                        )
+            tr = clip_spec.get("transition_in")
+            if tr and i == 0:
+                raise EmitError(
+                    f"first clip of track '{video_track['track']}' declares "
+                    "transition_in but has no preceding clip to dissolve from"
+                )
+            if tr:
+                frames = round(tr["duration"] * fps)
+                if frames < 2:
+                    raise EmitError(
+                        f"transition duration {tr['duration']}s rounds to "
+                        f"{frames} frame(s) at {fps} fps; minimum is 2 frames"
                     )
+                half = frames // 2
+                this_frames = round(clip_spec["duration"] * fps)
+                if half > prev_frames or frames - half > this_frames:
+                    raise EmitError(
+                        f"dissolve of {tr['duration']}s ({frames} frames) does "
+                        f"not fit its clips: it needs {half} frame(s) of the "
+                        f"preceding clip (which has {prev_frames}) and "
+                        f"{frames - half} of this clip (which has "
+                        f"{this_frames}) — shorten the dissolve or lengthen "
+                        "the clips"
+                    )
+                track.append(
+                    schema.Transition(
+                        name=f"{tr['type']}_{i}",
+                        in_offset=ot.RationalTime(half, fps),
+                        out_offset=ot.RationalTime(frames - half, fps),
+                        transition_type="SMPTE_Dissolve",
+                    )
+                )
+            prev_frames = round(clip_spec["duration"] * fps)
             track.append(_make_clip(clip_spec, media, fps))
         timeline.tracks.append(track)
 
