@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "otio-kit"
-version = "0.0.1.dev0"
+version = "0.0.1"
 description = "Compile timeline briefs into files that import cleanly into DaVinci Resolve Free - no scripting bridge, no Studio required."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -14,7 +14,7 @@ keywords = ["opentimelineio", "otio", "davinci-resolve", "timeline", "video-edit
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
-    "Intended Audience :: Video Developers",
+    "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU Affero General Public License v3",
     "Programming Language :: Python :: 3",
     "Topic :: Multimedia :: Video :: Non-Linear Editor",

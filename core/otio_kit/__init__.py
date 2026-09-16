@@ -4,4 +4,9 @@ DaVinci Resolve Free - no scripting bridge, no Studio required.
 Not affiliated with or endorsed by Blackmagic Design.
 """
 
-__version__ = "0.0.1.dev0"
+from importlib.metadata import PackageNotFoundError, version
+
+try:
+    __version__ = version("otio-kit")
+except PackageNotFoundError:  # imported from a source checkout, not installed
+    __version__ = "unknown"

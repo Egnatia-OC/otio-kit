@@ -18,13 +18,13 @@ small YAML brief into OTIO that imports cleanly — verified first-party on Free
 ## Install
 
 ```
-pip install otio-kit        # from PyPI (v0.0.1, day-10 release)
+pip install otio-kit        # from PyPI (requires Python 3.10+)
 ```
 
-Until then, from source:
+Or from source:
 
 ```
-git clone <this repo> && cd otio-kit
+git clone https://github.com/Egnatia-OC/otio-kit && cd otio-kit
 uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -e .
 ```
 
