@@ -3,6 +3,18 @@
 Format: newest first. Spec semantics are frozen per `spec_version`
 (`docs/spec-scope-v0.md`); breaking spec changes bump `spec_version`.
 
+## 0.0.3 (2026-09-16)
+
+- Reject dissolves that do not fit their clips: each half of the dissolve
+  must not exceed the quantized duration of the clip on its side.
+  Previously a 5 s dissolve between two 1 s clips silently emitted a
+  transition whose offsets exceeded the available media on both sides.
+  Equality is allowed (a clip may be fully consumed by the dissolve). The
+  fit rule is documented in `docs/spec-scope-v0.md`.
+- `transition_in` on the first clip of a track is now covered by a test:
+  the spec-validation layer already rejected it (loud `SpecError`); the
+  emitter now guards the same case for direct `emit()` calls.
+
 ## 0.0.2 (2026-09-16)
 
 - Reject clip durations that round to fewer than 1 frame (loud `EmitError`

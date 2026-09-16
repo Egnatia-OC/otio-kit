@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "otio-kit"
-version = "0.0.2"
+version = "0.0.3"
 description = "Compile timeline briefs into files that import cleanly into DaVinci Resolve Free - no scripting bridge, no Studio required."
 readme = "README.md"
 requires-python = ">=3.10"
