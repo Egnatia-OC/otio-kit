@@ -13,17 +13,23 @@ Compile timeline briefs into files that import cleanly into **DaVinci Resolve**
 Resolve 21.1 moved Python scripting to Studio. The one interface it left
 untouched — on **every** OS and tier — is the **timeline file** (OTIO, FCPXML,
 EDL). Every Resolve still imports them: Free or Studio, on Windows, macOS, or
-Linux. So the file route works wherever yours runs, and it's the only
-automation route left on Free.
+Linux. So file import works wherever yours runs, and it's the only
+automation route we've found that survives 21.1 on Free.
 
-`otio-kit` compiles a small YAML brief into a standard OTIO file for that route.
+`otio-kit` compiles a small YAML brief into a standard OTIO file.
 
-**We test hardest-first** — on the most restricted Resolve there is, **Linux
-Free 21.1** (no scripting, no H.264 decode). A cutlist that survives that
-gauntlet hits the strictest subset of constraints; the more-permissive targets
-(Windows, macOS, Studio) add capability, they don't remove it. The breakage
-list and safe-set: [`fidelity-log`](docs/fidelity-log.md),
+**Testing is hardest-first** — on the most restricted Resolve there is,
+**Linux Free 21.1** (no scripting, no H.264 decode). A timeline that
+survives that import has hit the strictest subset of constraints. The
+import has not yet been run on Windows or macOS; a Windows control run is
+next and will be logged. The breakage list and safe-set:
+[`fidelity-log`](docs/fidelity-log.md),
 [`console-status`](docs/console-status.md), [`spec-scope`](docs/spec-scope-v0.md).
+
+**Why a file, not an API call:** even if scripting comes back to Free, the
+file approach stands on its own. The output is a text file — diffable,
+versionable in git, revertable, and readable before it touches a timeline.
+An API call that mutates live NLE state can't give you that.
 
 ## Install
 
@@ -73,7 +79,9 @@ re-test cadence** — every new Resolve build gets re-imported and
 funds. No perks, no tiers, nothing to unlock.
 
 - **Patronage** — opens soon; the project is completing its business
-  registration and the checkout will appear here.
+  registration and the checkout will appear here. Patronage is a standard
+  purchase (the project is a business, not a non-profit); nothing here is
+  tax-deductible.
 - **Get notified** — an email list for the flagship launch and per-release
   re-test announcements is being set up; the link lands here. Single-purpose,
   unsubscribe anytime.
@@ -87,9 +95,6 @@ milestones (such as when project patronage opens) and never share or sell
 the list. Unsubscribe anytime, or email us to be removed manually. Payment
 data, if you later support the project, is processed by our payment provider
 and never stored by us.
-
-Patronage is processed as a standard purchase (the project is a business, not
-a non-profit); nothing here is tax-deductible.
 
 ## Licence
 
