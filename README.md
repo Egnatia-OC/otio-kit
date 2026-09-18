@@ -45,6 +45,14 @@ uv venv --python 3.12
 uv pip install -e .
 ```
 
+**Requirements:** Python 3.10+ (3.10 and 3.12 in CI). Pure Python — three
+dependencies (`opentimelineio`, `pyyaml`, `jsonschema`), CPU-only, no GPU,
+no display, no network at compile time, and no Resolve installation needed
+to compile. The engine has no OS floor of its own: it runs wherever
+Python 3.10+ runs, on Windows, macOS, or Linux. The OS floor for *importing*
+the output is Resolve's own — BMD publishes the system requirements for
+each version.
+
 ## Use
 
 ```
@@ -60,6 +68,10 @@ Alpha. The emitter covers the v0 safe-set only (see
 [`docs/spec-scope-v0.md`](docs/spec-scope-v0.md)); open items and known
 issues in [`KNOWN-ISSUES.md`](KNOWN-ISSUES.md). CI: ruff + pytest on Ubuntu
 and Windows, Python 3.10/3.12.
+
+Import target: any Resolve that imports OTIO (documented in the official
+manual since 18.6); the verified row is Free 21.1 Linux. The
+[fidelity registry](docs/fidelity-registry.md) tracks the rest.
 
 The committed media under `tests/golden/media/` are empty stubs: the golden
 suite proves emitter *determinism*, not import fidelity — import fidelity is
