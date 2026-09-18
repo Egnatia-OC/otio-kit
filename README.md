@@ -78,6 +78,16 @@ funds. No perks, no tiers, nothing to unlock.
   re-test announcements is being set up; the link lands here. Single-purpose,
   unsubscribe anytime.
 
+Privacy, in one paragraph: we collect one thing — your email address, if you
+choose to subscribe to project updates. Subscriptions are handled by
+MailerLite, a third-party email service; they send a confirmation email
+before you are added, and that confirmation is your consent record; every
+email includes an unsubscribe link. We email this list only for major project
+milestones (such as when project patronage opens) and never share or sell
+the list. Unsubscribe anytime, or email us to be removed manually. Payment
+data, if you later support the project, is processed by our payment provider
+and never stored by us.
+
 Patronage is processed as a standard purchase (the project is a business, not
 a non-profit); nothing here is tax-deductible.
 
