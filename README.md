@@ -2,20 +2,28 @@
 
 ![ci](https://github.com/Egnatia-OC/otio-kit/actions/workflows/ci.yml/badge.svg)
 
-Compile timeline briefs into files that import cleanly into **DaVinci Resolve
-Free** — no scripting bridge, no Studio required.
+Compile timeline briefs into files that import cleanly into **DaVinci Resolve**
+— Free or Studio, on Windows, macOS, or Linux. No scripting bridge.
 
 > Not affiliated with or endorsed by Blackmagic Design. "DaVinci Resolve" is a
 > trademark of Blackmagic Design Pty Ltd.
 
 ## Why
 
-Resolve 21.1 moved Python scripting to Studio and Linux-Free has never decoded
-H.264. What still works everywhere: **timeline files**. `otio-kit` compiles a
-small YAML brief into OTIO that imports cleanly — verified first-party on Free
-21.1 Linux, with the breakage list and safe-set published in
-[`docs/fidelity-log.md`](docs/fidelity-log.md), [`docs/console-status.md`](docs/console-status.md), and
-[`docs/spec-scope-v0.md`](docs/spec-scope-v0.md).
+Resolve 21.1 moved Python scripting to Studio. The one interface it left
+untouched — on **every** OS and tier — is the **timeline file** (OTIO, FCPXML,
+EDL). Every Resolve still imports them: Free or Studio, on Windows, macOS, or
+Linux. So the file route works wherever yours runs, and it's the only
+automation route left on Free.
+
+`otio-kit` compiles a small YAML brief into a standard OTIO file for that route.
+
+**We test hardest-first** — on the most restricted Resolve there is, **Linux
+Free 21.1** (no scripting, no H.264 decode). A cutlist that survives that
+gauntlet hits the strictest subset of constraints; the more-permissive targets
+(Windows, macOS, Studio) add capability, they don't remove it. The breakage
+list and safe-set: [`fidelity-log`](docs/fidelity-log.md),
+[`console-status`](docs/console-status.md), [`spec-scope`](docs/spec-scope-v0.md).
 
 ## Install
 
