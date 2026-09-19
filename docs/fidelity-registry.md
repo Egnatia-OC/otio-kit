@@ -22,14 +22,19 @@ are multiple independent rows.
 - **First-party:** the specimen is re-imported on each new Resolve build we
   test (21.2, 22.0, …). That per-release re-test cadence is what patronage
   funds.
-- **Crowd (you):** import the same specimen into *your* Resolve and file a
+- **Crowd (you):** import the specimen into *your* Resolve and file a
   [fidelity report](https://github.com/Egnatia-OC/otio-kit/issues/new?template=fidelity-report.md)
-  — a 2-minute contribution. Each report becomes a row here, cited to the
-  report and the contributor.
+  — a few minutes. Windows/macOS: [download the H.264 kit](https://github.com/Egnatia-OC/otio-kit/releases/download/specimen-60-h264/specimen-60-h264.zip);
+  Linux: build the DNxHR variant per the recipe below. Each report becomes a
+  row here, cited to the report and the contributor.
 
 ## The specimen
 
 Deterministic 60 s / 24 fps / 1920×1080 timeline, three tracks: cuts at
 0:00 / 0:20 / 0:40, a 1 s cross-dissolve, a 5 s title, a music bed, two
-markers. Same input → same output, so any row is reproducible. Media recipe:
-[`specimen/BUILD.md`](../specimen/BUILD.md).
+markers. Same input → same output, so any row is reproducible.
+
+- **H.264 kit (Windows / macOS):** [specimen-60-h264.zip](https://github.com/Egnatia-OC/otio-kit/releases/download/specimen-60-h264/specimen-60-h264.zip) — ready to import, checklist inside.
+- **DNxHR variant (Free Linux, the evidence variant):** build recipe at
+  [`specimen/BUILD.md`](../specimen/BUILD.md) (the repo carries 0-byte
+  media stubs; the build host keeps the real media).
