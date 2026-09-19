@@ -15,12 +15,12 @@ untouched is the **timeline file**: Resolve documents OTIO, EDL, and
 FCPXML import for Free and Studio on the supported platforms. This
 project has verified the OTIO import on Free 21.1 Linux (Windows is being
 checked; macOS has not been run yet), and file import is the only
-automation route we've found that survives 21.1 on Free.
+automation route I've found that survives 21.1 on Free.
 
 `otio-kit` compiles a small YAML brief into a standard OTIO file.
 
-**Testing starts with the most restricted target I have tested** —
-**Linux Free 21.1** (no scripting, no H.264 decode). A timeline that
+**Testing starts with the most restricted target: Free 21.1 on Linux**
+(no scripting, no H.264 decode). A timeline that
 survives that import has hit the strictest subset of constraints. The
 import has not yet been run on Windows or macOS; a Windows control run is
 next and will be logged. The breakage list and the v0 scope:

@@ -13,7 +13,7 @@ are multiple independent rows.
 
 | Resolve | OS | Edition | Source | Date | Result |
 |---|---|---|---|---|---|
-| 21.1.0.0017 | Linux (Ubuntu 24.04.4) | Free | first-party (us) | 2026-09-15 | **PASS** — 60 s / 24 fps specimen, DNxHR media: frame-accurate cuts, 1 s cross-dissolve intact, title + still honored, markers present (clip-local), no relink dialogs. AAC music bed silent (pre-existing Free/Linux codec gap, documented in the log). [Fidelity log](fidelity-log.md) |
+| 21.1.0.0017 | Linux (Ubuntu 24.04.4) | Free | first-party (this project) | 2026-09-15 | **PASS** — 60 s / 24 fps specimen (DNxHR video + PCM tones, AAC music bed; absolute paths): frame-accurate cuts, 1 s cross-dissolve intact, title + still honored, in-range marker present (clip-local; the second marker is emitted out of its clip's range and is dropped — documented emitter limitation), no relink dialogs. AAC music bed silent (pre-existing Free/Linux codec gap, documented in the log). [Fidelity log](fidelity-log.md) |
 
 **Count: 1 independent verification** (1 machine, Linux Free 21.1).
 
@@ -24,7 +24,7 @@ are multiple independent rows.
   funds.
 - **Crowd (you):** import the specimen into *your* Resolve and file a
   [fidelity report](https://github.com/Egnatia-OC/otio-kit/issues/new?template=fidelity-report.md)
-  — a few minutes. Windows/macOS: [download the H.264 kit](https://github.com/Egnatia-OC/otio-kit/releases/download/specimen-60-h264/specimen-60-h264.zip);
+  — about 10 minutes. Windows/macOS: [download the H.264 kit](https://github.com/Egnatia-OC/otio-kit/releases/download/specimen-60-h264/specimen-60-h264.zip);
   Linux: build the DNxHR variant per the recipe below. Each report becomes a
   row here, cited to the report and the contributor.
 

@@ -11,7 +11,8 @@ valuable as a breakage — the registry is a coverage table, not a bug tracker.
 
 **Environment**
 
-- Resolve version (title bar, or System → System → "Version"):
+- Resolve version (Help → About shows the full version, e.g. 21.1.0.0017;
+  the title bar shows the major version):
 - OS + edition (Windows / macOS / Linux × Free / Studio):
 
 **What you imported** (check one)
