@@ -11,18 +11,19 @@ Compile timeline briefs into files that import cleanly into **DaVinci Resolve**
 ## Why
 
 Resolve 21.1 moved Python scripting to Studio. The one interface it left
-untouched — on **every** OS and tier — is the **timeline file** (OTIO, FCPXML,
-EDL). Every Resolve still imports them: Free or Studio, on Windows, macOS, or
-Linux. So file import works wherever yours runs, and it's the only
+untouched is the **timeline file**: Resolve documents OTIO, EDL, and
+FCPXML import for Free and Studio on the supported platforms. This
+project has verified the OTIO import on Free 21.1 Linux (Windows is being
+checked; macOS has not been run yet), and file import is the only
 automation route we've found that survives 21.1 on Free.
 
 `otio-kit` compiles a small YAML brief into a standard OTIO file.
 
-**Testing is hardest-first** — on the most restricted Resolve there is,
+**Testing starts with the most restricted target I have tested** —
 **Linux Free 21.1** (no scripting, no H.264 decode). A timeline that
 survives that import has hit the strictest subset of constraints. The
 import has not yet been run on Windows or macOS; a Windows control run is
-next and will be logged. The breakage list and safe-set:
+next and will be logged. The breakage list and the v0 scope:
 [`fidelity-log`](docs/fidelity-log.md),
 [`console-status`](docs/console-status.md), [`spec-scope`](docs/spec-scope-v0.md).
 
@@ -48,10 +49,9 @@ uv pip install -e .
 **Requirements:** Python 3.10+ (3.10 and 3.12 in CI). Pure Python — three
 dependencies (`opentimelineio`, `pyyaml`, `jsonschema`), CPU-only, no GPU,
 no display, no network at compile time, and no Resolve installation needed
-to compile. The engine has no OS floor of its own: it runs wherever
-Python 3.10+ runs, on Windows, macOS, or Linux. The OS floor for *importing*
-the output is Resolve's own — BMD publishes the system requirements for
-each version.
+to compile. The compiler runs anywhere Python 3.10+ runs, on Windows,
+macOS, or Linux; importing the output depends on the target Resolve
+version and its system requirements (BMD publishes them per version).
 
 ## Use
 
@@ -60,11 +60,11 @@ otio-kit compile brief.yaml -o timeline.otio
 otio-kit validate brief.yaml
 ```
 
-Missing media fails loudly, listing every absent file in one pass. Never silent.
+Missing media fails loudly, listing every absent file in one pass.
 
 ## Status
 
-Alpha. The emitter covers the v0 safe-set only (see
+Alpha. The emitter covers the v0 scope only (see
 [`docs/spec-scope-v0.md`](docs/spec-scope-v0.md)); open items and known
 issues in [`KNOWN-ISSUES.md`](KNOWN-ISSUES.md). CI: ruff + pytest on Ubuntu
 and Windows, Python 3.10/3.12.
@@ -86,9 +86,9 @@ This project is not part of the OpenTimelineIO project (which it consumes).
 ## Support the project
 
 otio-kit is free and stays free. The ongoing cost is the **per-release
-re-test cadence** — every new Resolve build gets re-imported and
-[`docs/fidelity-log.md`](docs/fidelity-log.md) updated. That's what patronage
-funds. No perks, no tiers, nothing to unlock.
+re-test cadence** — the project plans to re-test each new Resolve build
+and update [`docs/fidelity-log.md`](docs/fidelity-log.md). That's what
+patronage is planned to fund. No perks, no tiers, nothing to unlock.
 
 - **Patronage** — opens soon; the project is completing its business
   registration and the checkout will appear here. Patronage is a standard

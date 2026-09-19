@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AutoSubs alternative for DaVinci Resolve Free 21.1 — otio-kit</title>
-<meta name="description" content="Resolve 21.1 moved scripting to Studio and AutoSubs-class Python tools stopped running on Free. otio-kit rebuilds the cut-based workflow on the file route — which works on every Resolve, on any OS: brief to spec to timeline file to import. Open source, local, no metering.">
+<meta name="description" content="Resolve 21.1 moved scripting to Studio and AutoSubs-class Python tools stopped running on Free. otio-kit rebuilds the cut-based workflow on file import — verified on Free 21.1 Linux (Windows being checked): brief to spec to timeline file to import. Open source, local, no metering.">
 <style>
 :root { color-scheme: light dark; }
 body { font: 16px/1.6 system-ui, -apple-system, sans-serif; max-width: 46rem; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
@@ -25,23 +25,28 @@ ul { padding-left: 1.2rem; }
 
 <p>DaVinci Resolve 21.1 moved scripting to Studio. Python tools that ran on
 Free — AutoSubs and tools like it — no longer execute: the menu entries remain,
-the clicks do nothing. The path that <em>survives</em> is file import: emit a
-timeline file (OTIO), import it, done. That is exactly the path otio-kit builds on.</p>
+the clicks do nothing. What remains is file import: emit a timeline file
+(OTIO), import it, done. That is exactly the path otio-kit builds on.</p>
 
-<h2>Verified today (first-party) — tested hardest-first, on Resolve Free 21.1 (Linux, the most restricted target)</h2>
+<h2>Verified today (first-party) — tested on the most restricted target I have tested, Resolve Free 21.1 (Linux)</h2>
 <ul>
   <li>Brief — hand-written or LLM-generated → validated spec → OTIO file →
-      import: frame-accurate cuts, transitions and markers intact, no relink
-      dialogs. <a href="https://github.com/Egnatia-OC/otio-kit/docs/fidelity-log.md">Fidelity log</a>.</li>
-  <li>Five-model benchmark on a 60-second, three-track specimen: every capable
-      model hit 5/5 cut points within 2 frames; cost per compiled timeline is a
-      fraction of a cent ($0 on a local model).
-      <a href="https://github.com/Egnatia-OC/otio-kit/docs/llm-baseline.md">Benchmark doc + re-runnable harness</a>.</li>
-  <li>Local-first by design: no upload, no credit metering, no watermark.
-      AGPL-3.0 open source.</li>
+      import: cut points at the expected frame positions, transitions and
+      markers intact, no relink dialogs (at 23.976 fps the emitter quantizes
+      to whole frames — about 1.4 frames over a 60 s brief; the 24 fps
+      specimen is exact. Documented in the log).
+      <a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/fidelity-log.md">Fidelity log</a>.</li>
+  <li>In one temperature-0 sample on a 60-second, three-track specimen, all
+      four capable models hit 5/5 cut points within ±2 frames (the sub-1B
+      control failed); cost per compiled timeline is a fraction of a cent
+      ($0 on a local model). A baseline, not a general accuracy claim.
+      <a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/llm-baseline.md">Benchmark doc + re-runnable harness</a>.</li>
+  <li>Local-first by design: the compiler uploads nothing, and the
+      local-LLM workflow keeps the brief on the machine (cloud LLM use is
+      optional). No credit metering, no watermark. AGPL-3.0 open source.</li>
 </ul>
 
-<h2>On the public roadmap (labelled roadmap, not claims)</h2>
+<h2>On the public roadmap (planned, not shipped)</h2>
 <div class="roadmap">
 <ul>
   <li><strong>Subtitle track emission</strong> — FCPXML first (it carries
@@ -54,7 +59,6 @@ timeline file (OTIO), import it, done. That is exactly the path otio-kit builds 
 
 <p>
   <a class="cta" href="https://github.com/Egnatia-OC/otio-kit">Get the engine →</a>
-  <a class="cta" href="https://github.com/Egnatia-OC/otio-kit">Watch for releases</a>
 </p>
 <p style="font-size:.9rem;opacity:.8">
 <code>pip install otio-kit</code> (Python 3.10+) — or
@@ -64,8 +68,8 @@ timeline file (OTIO), import it, done. That is exactly the path otio-kit builds 
 <footer>
 otio-kit is an independent open-source project (AGPL-3.0). Not affiliated with
 Blackmagic Design; "DaVinci Resolve" and "AutoSubs" are used nominatively.
-Evidence: <a href="https://github.com/Egnatia-OC/otio-kit/docs/matrix-21.1.md">test matrix</a> ·
-<a href="https://github.com/Egnatia-OC/otio-kit/docs/fidelity-log.md">fidelity log</a> ·
+Evidence: <a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/matrix-21.1.md">test matrix</a> ·
+<a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/fidelity-log.md">fidelity log</a> ·
 <a href="https://news.ycombinator.com/item?id=49610181">HN thread on the 21.1 change</a>.
 </footer>
 </body>
