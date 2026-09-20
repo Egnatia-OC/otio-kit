@@ -5,11 +5,25 @@ also live in `docs/fidelity-log.md`; this file is the defect/limitation log.
 
 ## Unverified platforms
 
-- **Windows / macOS Free: unverified.** Every fidelity claim is first-party on
-  Resolve Free 21.1 (21.1.0.0017) on Linux — the hardest target (no H.264
-  decode). A Windows control run is the first open item; macOS is second.
+- **macOS Free: unverified** — the second open item. **Windows Free 21.1
+  is now verified** (2026-09-20, independent control run on 21.1.0.0017;
+  H.264 kit specimen, stock-fade build — `docs/fidelity-registry.md`).
+  Linux Free 21.1 (21.1.0.0017) remains the hardest target (no H.264
+  decode).
 - **20.3 / 21.0 comparison column** — planned, not tested; no speculation
   shipped about pre-21.1 behavior.
+
+## Resolved: empty-timeline OTIO imports (2026-09-20)
+
+The original H.264 kit specimen imported as an **empty timeline with no
+dialog** on Windows 21.1.0.0014 (first control run) and 21.1.0.0017
+(retest). Cause: the kit shipped a custom `AudioFadeIn_1` effect schema,
+which Resolve's OTIO importer treats as fatal
+(`Import Log (Fatal) - failed to import OTIO timeline`) — the same failure
+first documented on Linux (`docs/fidelity-log.md`, root cause #2). The kit
+was rebuilt with the stock `Effect.1` representation and imported cleanly
+on 21.1.0.0017 (registry, 2026-09-20 row). Not a platform or build issue;
+no evidence implicates the .0014 importer.
 
 ## Audio
 

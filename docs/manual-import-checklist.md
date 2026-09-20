@@ -39,3 +39,4 @@ Run after every Resolve release you support. One row per run, appended to
 | Date | Resolve | OS | Outcome | Notes |
 |---|---|---|---|---|
 | 2026-09-15 | 21.1.0.0017 Free | Ubuntu 24.04, RTX 3090 | PASS (DNxHR variant) | red-marker observation pending; AAC music silent-expected; see fidelity-log.md |
+| 2026-09-20 | 21.1.0.0017 Free | Windows 10 Pro (GTX 1650) | PASS (H.264 kit, stock-fade specimen) | independent control run; structure + markers via Edit Index/Markers tab; red marker absent (documented out-of-range limitation, matches Linux); media decode not reported — see fidelity-registry.md |

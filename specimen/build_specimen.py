@@ -50,23 +50,27 @@ def point_marker(name, at_s, color):
     )
 
 
-def canonicalize_fade(path):
-    """Post-process to spec-canonical AudioFadeIn_1 (top-level duration field).
+def add_fade_parameters(path):
+    """Post-process: put the fade duration in the stock Effect's parameters.
 
-    The pure-Python OTIO build serializes custom effects as generic Effect.1;
-    Resolve's importer expects the standard effect schema name.
+    The pure-Python otio bindings silently drop a `parameters` set on an
+    Effect, so the block is injected into the serialized JSON. Stock
+    `Effect.1` only — a custom schema here is fatal on import
+    (docs/fidelity-log.md, root cause #2).
     """
     with open(path) as f:
         doc = json.load(f)
     for trk in doc["tracks"]["children"]:
         for c in trk["children"]:
             for e in c.get("effects", []):
-                if e.get("name") == "AudioFadeIn":
-                    e["OTIO_SCHEMA"] = "AudioFadeIn_1"
-                    md = e.get("metadata") or {}
-                    if "duration" in md:
-                        e["duration"] = md.pop("duration")
-                    e["metadata"] = md
+                if e.get("name") == "AudioFadeIn" and e.get("OTIO_SCHEMA") == "Effect.1":
+                    e["parameters"] = {
+                        "duration": {
+                            "OTIO_SCHEMA": "RationalTime.1",
+                            "rate": float(FPS),
+                            "value": float(48),
+                        }
+                    }
     with open(path, "w") as f:
         json.dump(doc, f, indent=4)
 
@@ -97,8 +101,7 @@ def main():
 
     # --- A1: music bed with 2s fade-in ---
     music = clip("music-bed", "music.m4a", 0, 60)
-    fade = schema.Effect(name="AudioFadeIn", effect_name="AudioFadeIn",
-                         metadata={"duration": 48})
+    fade = schema.Effect(name="AudioFadeIn", effect_name="AudioFadeIn")
     music.effects.append(fade)
     a1.append(music)
 
@@ -108,7 +111,7 @@ def main():
 
     out = os.path.join(HERE, "specimen-60.otio")
     adapters.write_to_file(tl, out, "otio_json")
-    canonicalize_fade(out)
+    add_fade_parameters(out)
     print("wrote", out)
 
     # verify structure

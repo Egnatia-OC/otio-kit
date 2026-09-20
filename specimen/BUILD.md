@@ -86,9 +86,11 @@ Confirm with `ffprobe -v error -select_streams v:0
 `build_specimen.py` assembles `specimen-60.otio` (the H.264 variant, relative
 `media/` paths): 3 tracks — A1 music+fade, V1 three clips + a 1 s
 SMPTE_Dissolve at 0:20, V2 title still 0:00–0:05 — markers beat-1@0:10 BLUE /
-outro@0:45 RED. One post-step canonicalizes the fade to spec `AudioFadeIn_1`
-(top-level `duration`), because the pure-Python build serializes custom effects
-as generic `Effect.1`.
+outro@0:45 RED. The fade is a stock `Effect.1` with the duration in
+`parameters` (`RationalTime`) — stock schemas only: a previous post-step
+"canonicalized" it to a custom `AudioFadeIn_1` schema, which Resolve's
+importer treats as fatal (see `docs/fidelity-log.md`, root cause #2) and
+which made the public kit fail on every platform; removed 2026-09-20.
 
 ```
 uv run python build_specimen.py

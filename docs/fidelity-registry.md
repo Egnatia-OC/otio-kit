@@ -14,8 +14,9 @@ are multiple independent rows.
 | Resolve | OS | Edition | Source | Date | Result |
 |---|---|---|---|---|---|
 | 21.1.0.0017 | Linux (Ubuntu 24.04.4) | Free | first-party (this project) | 2026-09-15 | **PASS** — 60 s / 24 fps specimen (DNxHR video + PCM tones, AAC music bed; absolute paths): frame-accurate cuts, 1 s cross-dissolve intact, title + still honored, in-range marker present (clip-local; the second marker is emitted out of its clip's range and is dropped — documented emitter limitation), no relink dialogs. AAC music bed silent (pre-existing Free/Linux codec gap, documented in the log). [Fidelity log](fidelity-log.md) |
+| 21.1.0.0017 | Windows 10 Pro 22H2 (GTX 1650) | Free | independent (control run, "Chris") | 2026-09-20 | **PASS** — 60 s / 24 fps H.264 kit specimen (stock-`Effect.1` fade; relative `media/` paths): frame-exact cuts 0:00/0:20/0:40, 1 s dissolve intact, title + still honored, in-range marker present, out-of-range marker dropped (matches Linux — limitation is cross-platform), 60 s total, no relink dialog. Structure + markers verified via Edit Index/Markers tab; media decode not reported. [Report](reports/2026-09-20-windows-0017-partB.md) |
 
-**Count: 1 independent verification** (1 machine, Linux Free 21.1).
+**Count: 2 independent verifications** (2 machines: Linux + Windows, Free 21.1).
 
 ## How rows get added
 
