@@ -37,7 +37,7 @@ first clip of a track is rejected, since there is nothing to dissolve from.
 | Custom effect schemas | **Fatal** on 21.1 Linux import and in `opentimelineio` itself (`AudioFadeIn_1` case) |
 | Bare relative media URLs | Linux conform misresolves them; emitter always writes existing absolute paths |
 | AAC-only music audibility | Free Linux cannot decode AAC (record) — ship audio as PCM/WAV-class containers (music.m4a unverified; open item) |
-| Audio fade-in (applied in Resolve) | Unverified — the test machine has no audio path (no sound card). The emitter records the *intent* as a stock `Effect` named `AudioFadeIn` with parameters in `metadata.cutlist` for downstream tools; it is **not** an applied fade |
+| Audio fade-in (applied in Resolve) | v0 emitter contract unchanged (intent for downstream tools), but **verified on Windows 21.1** (2026-09-20, .0017): the stock `Effect.1` with `effect_name: AudioFadeIn` and the duration in `parameters` (`RationalTime`) imports as an **applied** 2 s fade-in (clip handle + waveform ramp 0:00–0:02). The emitter's `metadata.cutlist` form remains unverified as applied; Linux unverified (no audio path on the test machine) |
 
 ## Versioning rules
 
