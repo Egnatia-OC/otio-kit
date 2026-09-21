@@ -13,8 +13,8 @@ Compile timeline briefs into files that import cleanly into **DaVinci Resolve**
 Resolve 21.1 moved Python scripting to Studio. The one interface it left
 untouched is the **timeline file**: Resolve documents OTIO, EDL, and
 FCPXML import for Free and Studio on the supported platforms. This
-project has verified the OTIO import on Free 21.1 Linux (Windows is being
-checked; macOS has not been run yet), and file import is the only
+project has verified the OTIO import on Free 21.1 Linux and Windows
+(macOS has not been run yet), and file import is the only
 automation route I've found that survives 21.1 on Free.
 
 `otio-kit` compiles a small YAML brief into a standard OTIO file.
@@ -22,8 +22,9 @@ automation route I've found that survives 21.1 on Free.
 **Testing starts with the most restricted target: Free 21.1 on Linux**
 (no scripting, no H.264 decode). A timeline that
 survives that import has hit the strictest subset of constraints. The
-import has not yet been run on Windows or macOS; a Windows control run is
-next and will be logged. The breakage list and the v0 scope:
+import has also been run on Windows (independent control run, clean —
+the registry carries the row); macOS has not been run yet. The breakage
+list and the v0 scope:
 [`fidelity-log`](docs/fidelity-log.md),
 [`console-status`](docs/console-status.md), [`spec-scope`](docs/spec-scope-v0.md).
 
@@ -70,7 +71,7 @@ issues in [`KNOWN-ISSUES.md`](KNOWN-ISSUES.md). CI: ruff + pytest on Ubuntu
 and Windows, Python 3.10/3.12.
 
 Import target: any Resolve that imports OTIO (documented in the official
-manual since 18.6); the verified row is Free 21.1 Linux. The
+manual since 18.6); the verified rows are Free 21.1 Linux and Windows. The
 [fidelity registry](docs/fidelity-registry.md) tracks the rest.
 
 The committed media under `tests/golden/media/` are empty stubs: the golden
