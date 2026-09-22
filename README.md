@@ -95,9 +95,9 @@ patronage is planned to fund. No perks, no tiers, nothing to unlock.
   registration and the checkout will appear here. Patronage is a standard
   purchase (the project is a business, not a non-profit); nothing here is
   tax-deductible.
-- **Get notified** — an email list for the flagship launch and per-release
-  re-test announcements is being set up; the link lands here. Single-purpose,
-  unsubscribe anytime.
+- **Get notified** — the email list for the flagship launch and per-release
+  re-test announcements: [join the list](https://preview.mailerlite.io/forms/2642647/198988005317281408/share)
+  (single-purpose, unsubscribe anytime).
 
 Privacy, in one paragraph: we collect one thing — your email address, if you
 choose to subscribe to project updates. Subscriptions are handled by
