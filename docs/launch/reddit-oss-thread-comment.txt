@@ -1,57 +1,45 @@
 OPEN SOURCE MONTHLY THREAD - COMMENT
 
-This is the comment the subreddit post points at. It has to stand alone, because people
-will read it without the post. Paste in the Markdown editor.
+Has to stand alone. Shorter than a README, longer than a one-liner.
+Paste in the Markdown editor.
 
 BODY:
 
-otio-kit: compile a timeline brief into an OTIO file that imports cleanly into Resolve Free
+otio-kit: compile a short YAML brief into an OTIO timeline that imports into Resolve Free
 
-What it is: a small Python compiler. You write a YAML brief (timeline name, fps, media,
-clips with durations, a dissolve, markers, a music bed), it validates the spec and the
-media, and it writes a standard OTIO timeline. You import the file. No scripting bridge,
-no Python inside Resolve, no Studio licence. The compiler itself does not need Resolve
-installed and runs on any machine with Python 3.10+.
+21.1 moved Python scripting to Studio. File import was not touched, so that is the last
+automation surface left on Free. This tool builds around it.
 
-Why it exists: 21.1 moved Python scripting to Studio. File import was not touched, so it
-is the only automation surface left on Free. The full test matrix of what broke is in the
-repo, with the method on record.
+Write a brief, get a timeline file, import it. No scripting bridge and no Studio licence.
+The compiler runs on any machine with Python 3.10+ and does not need Resolve installed.
 
 Install:
 
     pip install otio-kit
 
-Then:
+Run:
 
     otio-kit compile brief.yaml -o timeline.otio
     otio-kit validate brief.yaml
 
-Verified import, Free 21.1.0.0017:
+Imported cleanly on Free 21.1.0.0017 twice. Linux first, then a Windows machine run by
+someone else. Cuts landed on the right frames, the dissolve held, the title and markers
+were there, no relink dialogs. macOS and anything newer than 21.1 are untested. The
+registry only gets a row after an import has actually been run on that build.
 
-- Linux, Ubuntu 24.04, first-party run, 2026-09-15: frame-accurate cuts, 1 s dissolve
-  intact, title on V2 honored, clip marker present, no relink dialogs, no offline media.
-- Windows 10, independent control run by another person, 2026-09-20/21: frame-exact cuts,
-  dissolve intact, title and marker present, audio audible, no relink dialog.
+It does cuts, dissolves, stills on an upper track, markers and an audio bed. It does not
+do effects, grades, Fusion, speed changes or gaps. No evidence those import correctly, so
+the tool refuses them instead of guessing.
 
-Not verified: macOS, and anything newer than 21.1. A row is added to the registry only
-after the import has actually been run on that build, so the count is honest.
-
-Scope right now: sequential clips with frame-exact durations, cross-dissolves between
-adjacent clips, stills on upper tracks, stock marker colours, audio bed. Not in scope:
-effects, grades, Fusion comps, speed changes, gaps, retiming. No import evidence for
-those, so they are rejected with an error rather than silently mis-emitted.
-
-Two things it will not do, because they break the importer: custom OTIO effect schemas
-(empty timeline, no error dialog) and bare relative media paths on Linux (misresolved).
-Both are hard rules in the emitter.
+Two failures I hit, both blocked in the code now. Custom OTIO effect schemas make the
+import fail with an empty timeline and no dialog. Relative media paths misresolve on
+Linux.
 
 Repo: https://github.com/Egnatia-OC/otio-kit
 Site: https://egnatia-oc.github.io/otio-kit/
-Fidelity registry: https://github.com/Egnatia-OC/otio-kit/blob/master/docs/fidelity-registry.md
-Console test matrix: https://github.com/Egnatia-OC/otio-kit/blob/master/docs/console-status.md
+Registry: https://github.com/Egnatia-OC/otio-kit/blob/master/docs/fidelity-registry.md
 
-If you import the specimen into your build and file a report, that is the most useful
-contribution there is right now. Template is in the issue tracker, takes about ten
-minutes, and you get a cited row.
+A fidelity report from your build is the most useful contribution right now. Ten minutes,
+template in the issue tracker, and your build number goes in the registry.
 
-AGPL-3.0, commercial dual licensing on request. Not affiliated with Blackmagic Design.
+AGPL-3.0. Not affiliated with Blackmagic Design.
