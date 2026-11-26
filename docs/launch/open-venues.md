@@ -121,7 +121,7 @@ Title: `otio-kit: compiling YAML briefs into DaVinci Resolve timelines, because 
 
 ## 4. r/LocalLLaMA
 
-Title: `Compiling prose briefs into video timelines with a local model: harness, numbers, and where it fails`
+Title: `Local model compiles prose briefs into video timelines: harness, numbers, and where it fails`
 
 > Not a video tool post exactly. I needed to turn a written edit brief into a
 > structured timeline, and measured whether models can do it: brief + JSON schema in,

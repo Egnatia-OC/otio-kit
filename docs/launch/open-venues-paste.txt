@@ -57,7 +57,7 @@ Happy to answer anything about the import behaviour, and a report from a build I
 ====================================================================
 4. r/LocalLLaMA — TITLE
 ====================================================================
-Compiling prose briefs into video timelines with a local model: harness, numbers, and where it fails
+Local model compiles prose briefs into video timelines: harness, numbers, and where it fails
 
 ====================================================================
 4. r/LocalLLaMA — BODY
