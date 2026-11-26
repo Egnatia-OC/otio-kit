@@ -42,7 +42,7 @@ Canonical: https://egnatia-oc.github.io/otio-kit/otio-import-troubleshooting.htm
 otio-kit: compiling YAML briefs into DaVinci Resolve timelines, because scripting left the free version
 
 ====================================================================
-3. r/opensource — BODY
+3. r/opensource — BODY (flair: Promotional — required, rule 8)
 ====================================================================
 DaVinci Resolve 21.1 moved Python scripting to Studio. On the free build, the Scripts menu loads nothing, the socket refuses connections, and the console is Lua-only and sandboxed. I tested all of it and published the matrix, then built around the one surface that did not change: file import.
 

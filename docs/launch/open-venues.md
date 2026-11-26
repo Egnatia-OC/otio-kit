@@ -77,6 +77,24 @@ Tags: `python`, `video`, `opensource`, `davinciresolve`.
 
 ## 3. r/opensource
 
+**Flair: `Promotional`.** Not optional — rule 8 ("Use Correct Flairs") says flair is
+required on every post, and defines `Promotional` as "when you are sharing a project,
+yours or otherwise". The other flairs (`Alternatives`, `Discussion`, `Community`) are
+wrong for a project launch. Reddit has no tags; hashtags do nothing and look off.
+
+Four more of their rules apply to this post:
+
+- Rule 4: linked repositories **must** have a `LICENSE` file with an OSI-listed licence.
+  AGPL-3.0 is OSI-approved and `LICENSE` is in the repo root — nothing to change, but a
+  fork or mirror without the file would be removed.
+- Rule 6: no drive-by posting. Stay in the thread for the first two hours and answer
+  every comment; a launch post with no author replies is what that rule targets.
+- Rule 2: under 10% of your posts should promote your own work (they say they are a
+  little more forgiving). Do not post the same link to three subs in one day.
+- Rule 3: "All AI-generated content is low-effort and ban worthy." Do not let the text
+  read as generated: the body here is first person, has specific build numbers, and
+  mentions no LLM. Keep it that way, and do not paste the r/LocalLLaMA text here.
+
 Title: `otio-kit: compiling YAML briefs into DaVinci Resolve timelines, because scripting left the free version`
 
 > DaVinci Resolve 21.1 moved Python scripting to Studio. On the free build, the
