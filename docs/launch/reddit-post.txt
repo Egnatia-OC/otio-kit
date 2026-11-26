@@ -1,0 +1,62 @@
+SUBREDDIT POST - paste into the MARKDOWN editor ("Switch to Markdown editor"),
+never the rich text box. Plain text, minimal markup, TLDR first, link last.
+
+TITLE (use this, not the old one):
+
+I tested every scripting surface on Resolve Free 21.1 and wrote down what is actually dead
+
+BODY:
+
+TLDR: 21.1 moved Python scripting to Studio. On Free, the Scripts menu loads nothing,
+the external socket refuses connections, and the console that remains is a sandboxed
+Lua REPL. I tested all of it on 21.1.0.0017 and published the raw results, including a
+workaround that still works: timeline files. OTIO import was not touched by the change,
+so I built a small open-source compiler that turns a YAML brief into an OTIO timeline.
+Import is verified on Free 21.1 on Linux and Windows. macOS is untested and I say so
+everywhere it matters.
+
+I am not posting this to sell anything. The measurements took a day and were scattered
+across forum posts, so they are now in one place with the method on record.
+
+What I tested on 21.1.0.0017 Free, Ubuntu 24.04:
+
+- Scripts menu. It renders: four submenus, all empty. Python files placed in the
+  documented Utility path never appear. No dialog, no error, no log line.
+- Console. It opens and executes Lua, and the resolve object is injected. There is no
+  Python selector on Free. The sandbox strips io and os.execute and blocks file writes.
+- External scripting socket. 127.0.0.1:1211 is refused whether Resolve is running or
+  closed. DaVinciResolveScript ships in the app only and will not import from system Python.
+- Fusion macros. The documented Tools > Macros browser is gone from the 21.1 Fusion UI,
+  so that trigger path is unreachable regardless of what is in the Macros folder.
+
+One caveat that matters: this is one machine and one build. Other builds and platforms
+have reported different results for Lua, and I have linked the community reports next to
+my own rows rather than merging them.
+
+What still works is file import. That is the whole reason the project exists. A brief
+(the kind of thing you or an LLM can write) compiles to a standard OTIO file, and the
+file imports with frame-accurate cuts, a cross-dissolve, a title on an upper track, and
+clip markers. Two formats are worth knowing: EDL imports fine but cannot carry the
+dissolve, stills and markers in one file, and OTIO is what Resolve has documented since
+18.6.
+
+Two failures I hit that are not documented anywhere, and now are hard rules in the emitter:
+
+- A custom OTIO effect schema makes the import fail with an empty timeline and no
+  dialog. It is fatal, not ignored.
+- Relative media paths misresolve on Linux conform. Absolute paths or nothing.
+
+What v0 does not do: effects, grades, Fusion comps, speed changes, gaps. There is no
+import evidence for those, so the spec rejects them with a loud error instead of
+producing a timeline that looks right and is not. Alpha, AGPL-3.0.
+
+If you want to help, the useful thing is a fidelity report, not a star. Import the
+specimen kit into your build, run the checklist, file it. About ten minutes, and it
+becomes a cited row with your build number. macOS and anything past 21.1 are the rows I
+do not have.
+
+The write-up, the full test matrix, the fidelity registry and the compiler are all in my
+comment in this month's open source thread: <PASTE-LINK-HERE>
+
+Happy to answer questions about the import behaviour. The failure modes are more
+interesting than the success.
