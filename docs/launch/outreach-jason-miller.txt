@@ -1,0 +1,59 @@
+OUTREACH - Jason Miller, davinciresolveclub.com
+
+To:      hello@davinciresolveclub.com
+Subject: Free 21.1 scripting guide: a missing row (file import)
+
+His contact page asks for: article URL, Resolve version, OS, Free/Studio, the exact
+claim that looks wrong, expected vs actual. This follows that shape on purpose, and
+labels documented fact vs hands-on test the way his editorial standards page does.
+
+BODY:
+
+Hi Jason,
+
+I maintain otio-kit, an open source compiler that turns a YAML brief into an OTIO
+timeline that imports into Resolve. I am writing about your scripting API guide, so read
+this as a self-interested note.
+
+Article: https://davinciresolveclub.com/davinci-resolve-scripting-api/
+
+This is a gap rather than an error, so file it under guide requests if that is easier.
+
+Your matrix covers the Python and Lua routes, and the conclusion follows from those. File
+import is not one of those routes and has no row, so a reader who only needs to get an
+edit into Resolve has nothing to check. OTIO, EDL and FCPXML still import on Free after
+21.1. The release notes move scripting to Studio, not file import.
+
+My hands-on rows, so you can see what I am actually claiming: Free 21.1.0.0017, Ubuntu
+24.04 and Windows 10, both imported a generated OTIO specimen with frame-accurate cuts,
+a one second cross-dissolve, a title on the upper track and clip markers, no relink
+dialogs. Linux was my machine, Windows was a separate person's run.
+
+Method and raw results, not just the conclusion:
+https://github.com/Egnatia-OC/otio-kit/blob/master/docs/console-status.md
+https://github.com/Egnatia-OC/otio-kit/blob/master/docs/fidelity-registry.md
+
+Not claimed: macOS, anything past 21.1, and any workflow that needs Python inside
+Resolve. For those your advice stands.
+
+If the gap looks real to you, I will send a three sentence paragraph you can edit or cut
+down. If you think I have misread the release notes somewhere, I would rather hear that.
+
+Your AutoSubs section is the reason I went with files instead of waiting for scripting to
+come back. Thank you for writing it up.
+
+[Your name]
+https://github.com/Egnatia-OC/otio-kit
+
+NOTES
+
+- 230 words. One ask, stated once, with an easy exit ("edit or cut down").
+- The self-interested disclosure is in the second sentence, not buried. Editors at
+  independent publications get pitched constantly; naming the interest is what gets the
+  rest read.
+- Do not attach anything. Do not ask for a link, a review, or a mention by name; the ask
+  is a row in a table, which is what his page is actually for.
+- If he replies asking for the specimen, send the H.264 kit link and the ten minute
+  checklist, not a zip.
+- Send Tuesday to Thursday morning, US Eastern. His guide was updated 2026-11-19, so it
+  is live and still being maintained.
