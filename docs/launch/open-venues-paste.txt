@@ -55,6 +55,42 @@ AGPL-3.0. Source and evidence: https://github.com/Egnatia-OC/otio-kit — write-
 Happy to answer anything about the import behaviour, and a report from a build I have not tested is genuinely more useful than a star.
 
 ====================================================================
+3b. r/VideoEditing — DEVELOPER THREAD COMMENT (this is their only door)
+https://www.reddit.com/r/VideoEditing/ — pinned developer thread
+====================================================================
+I build otio-kit, an open source compiler that turns a written timeline brief into an OTIO file you import into Resolve. It exists because 21.1 moved Python scripting to Studio and file import is what is left on the free build.
+
+It does cuts, dissolves, stills on an upper track, markers and an audio bed. It refuses effects and grades, because I have no import evidence for those and a plausible wrong timeline is worse than an error. Import is verified on Free 21.1 on Linux and Windows, with build numbers and a reproduction kit in a public registry. macOS is untested.
+
+Runs anywhere Python 3.10+ runs and needs no Resolve install to compile. AGPL-3.0.
+
+https://github.com/Egnatia-OC/otio-kit
+
+====================================================================
+3b. r/VideoEditing — TUESDAY TUTORIAL (only if you want the reach; teaches, does not sell)
+Title format is fixed by their rules: [TUTORIAL] then the software name.
+====================================================================
+[TUTORIAL] DaVinci Resolve Free: building a timeline from a written shot list, with no scripting
+
+Resolve 21.1 moved Python scripting to Studio, so the small automation scripts a lot of us ran on the free build stopped working. What is still there is file import: Edit page > File > Import > Timeline, which accepts OTIO, EDL and FCPXML. This is a walkthrough of using that as an automation path, with a written shot list as the input.
+
+You do not need to write code to follow this. The intermediate format is plain text, and I will show the whole thing.
+
+1. Write the edit as text, not as clicks. Track, clip, duration, transition, marker. Something like: V1 starts with shot A for 20 seconds, then shot B for 20 seconds with a one second cross-dissolve, then shot C for 20 seconds. V2 holds a title for the first five seconds. A1 carries music for the full 60. One marker at 10 seconds. That description is the whole input. Everything after this is bookkeeping.
+
+2. Choose the format by what you need to carry. CMX 3600 EDL only does cuts. It cannot carry a dissolve, a still on an upper track and markers in one file, so the moment your edit has any of those you are looking at OTIO or FCPXML. OTIO is the one Resolve has documented since 18.6 and the one that carries all three.
+
+3. Build the timeline file. An OTIO timeline is a stack of tracks, each track a list of clips with a source range, and markers attached to clips. Two rules matter more than the rest: every schema name must be a stock one, and every clip must reference media that exists when you import.
+
+4. Use absolute media paths. On Linux the conform step is filename and reel based, so a relative path can resolve to nothing even when the file is right there. I write absolute paths at compile time and re-point them if the timeline moves machines.
+
+5. Import and check five things, in order: total duration, cut positions, the dissolve, the marker, and whether any clip shows as offline. All five are visible in the timeline without playing anything.
+
+Two failures that cost me an afternoon and produce no error message: a custom effect schema (mine was a fade named AudioFadeIn_1) makes the import return an empty timeline with no dialog, and relative media paths import clips as offline. If your timeline is empty, list the schemas in the file first; if clips are offline, check the paths before blaming the importer.
+
+If you would rather not hand-write the JSON, I wrote a compiler that takes a short YAML brief and emits the OTIO, but nothing above depends on it. The technique works with any tool that writes a valid file.
+
+====================================================================
 4. r/LocalLLaMA — TITLE
 ====================================================================
 Local model compiles prose briefs into video timelines: harness, numbers, and where it fails
@@ -130,4 +166,8 @@ otio-kit compiles a short YAML brief into a standard OTIO timeline that imports 
 ====================================================================
 8. ORDER
 ====================================================================
-Day 1: 1, 2, 5. Day 2: 3, Lemmy (post the dev.to link). Day 3: 4. Day 5: 6, 7.
+Day 1: 1, 2, 5 (awesome form, dev.to, Mastodon/Bluesky).
+Day 2: 3 (r/opensource, flair Promotional), 3b developer-thread comment, Lemmy (dev.to link).
+Day 3: 4 (r/LocalLLaMA).
+Tuesday: 3b tutorial. Their rules reserve the [TUTORIAL] slot for Tuesdays — Dec 1 is the next one.
+Day 5: 6, 7.

@@ -119,6 +119,36 @@ Title: `otio-kit: compiling YAML briefs into DaVinci Resolve timelines, because 
 > Happy to answer anything about the import behaviour, and a report from a build I
 > have not tested is genuinely more useful than a star.
 
+## 3b. r/VideoEditing
+
+Read this before typing: it is the strictest of the eight and the only venue where a
+plain product post is an automatic removal.
+
+Rule 6, in their words: *"We don't allow developers to post about their product directly
+as a post or spam our comments with their product, regardless of how good it is. We have
+a dedicated thread for you to use."* So there are exactly two compliant doors:
+
+1. **The pinned developer thread** — the short comment in `open-venues-paste.txt`. This
+   is a monthly thread, so check when it was posted; a comment on day 1 of the thread is
+   read, a comment on day 27 is not.
+2. **A Tuesday tutorial** — rule 10 fixes the title: `[TUTORIAL]` first, then the name of
+   the software. Any other day, or a title without the tag, is removed. This is the only
+   format that reaches the 535k subscribers, and it only works if the post teaches
+   something specific end to end. The tutorial in the paste file does: five steps to turn
+   a written shot list into an importable file, with the tool mentioned once at the end
+   and explicitly marked as unnecessary.
+
+Three more that apply:
+
+- Rule 4: do not post here and in r/editors. Pick one. This sub is for hobby and amateur
+  editors, r/editors for professionals.
+- Rule 12: no channel promotion. A link to the repo inside a tutorial is fine; a link to
+  a video about the repo is not.
+- Rule 8: no URL shorteners, anywhere.
+
+Skip the tutorial if the import clip is still unrecorded. A tutorial needs no video to be
+valid, but this sub reads craft posts with pictures far more readily than wall-of-text.
+
 ## 4. r/LocalLLaMA
 
 Title: `Local model compiles prose briefs into video timelines: harness, numbers, and where it fails`
