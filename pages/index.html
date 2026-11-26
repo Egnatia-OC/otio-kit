@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>otio-kit — compile a timeline brief into an OTIO file that imports cleanly into DaVinci Resolve</title>
+<meta name="description" content="DaVinci Resolve 21.1 moved Python scripting to Studio. File import still works on Free. otio-kit compiles a small YAML brief into an OTIO timeline — verified on Free 21.1 Linux and Windows. Open source, AGPL-3.0, runs anywhere Python 3.10+ runs.">
+<meta property="og:title" content="otio-kit — timeline files, not scripting bridges">
+<meta property="og:description" content="Compile a YAML brief into an OTIO timeline that imports cleanly into Resolve Free. Verified on Free 21.1 Linux and Windows.">
+<style>
+:root { color-scheme: light dark; }
+body { font: 16px/1.65 system-ui, -apple-system, sans-serif; max-width: 46rem; margin: 0 auto; padding: 2.5rem 1.25rem 3rem; }
+h1 { font-size: 1.75rem; line-height: 1.25; margin: .35rem 0 1rem; letter-spacing: -.01em; }
+h2 { font-size: 1.05rem; margin-top: 2.4rem; padding-bottom: .35rem; border-bottom: 1px solid #8883; }
+.kicker { text-transform: uppercase; letter-spacing: .09em; font-size: .75rem; opacity: .65; margin: 0; }
+a { color: #0b5fff; }
+@media (prefers-color-scheme: dark) { a { color: #7fb0ff; } }
+.lede { font-size: 1.06rem; }
+.cta { display: inline-block; padding: .55rem 1rem; border: 1px solid currentColor; border-radius: 6px; margin: .4rem .5rem .4rem 0; text-decoration: none; font-weight: 600; }
+code { font-size: .88em; background: #8882; padding: .1em .35em; border-radius: 4px; }
+pre { background: #8881; padding: .85rem 1rem; border-radius: 8px; overflow-x: auto; font-size: .84rem; line-height: 1.5; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; margin: .6rem 0; }
+th, td { text-align: left; padding: .45rem .5rem; border-bottom: 1px solid #8883; vertical-align: top; }
+th { font-weight: 600; opacity: .75; font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; }
+.pass { color: #15803d; font-weight: 600; }
+@media (prefers-color-scheme: dark) { .pass { color: #4ade80; } }
+.note { border-left: 3px solid #d97706; padding-left: 1rem; font-size: .93rem; }
+ul { padding-left: 1.2rem; }
+footer { margin-top: 3rem; font-size: .85rem; opacity: .75; border-top: 1px solid #8884; padding-top: 1rem; }
+</style>
+</head>
+<body>
+<p class="kicker">otio-kit · file-based editing engine</p>
+<h1>Timeline files are the automation surface Resolve&nbsp;Free didn't lose.</h1>
+
+<p class="lede">DaVinci Resolve 21.1 moved Python scripting to Studio. The Scripts
+menu loads nothing, the external socket refuses connections, and the console that
+remains is a sandboxed Lua REPL. What still works on Free is <strong>file
+import</strong> — and that is the surface this project builds on.</p>
+
+<p>otio-kit compiles a small YAML brief into a standard <strong>OTIO</strong>
+timeline: cuts, a cross-dissolve, stills on upper tracks, markers, a music bed.
+Then you import it. No scripting bridge, no Studio licence, no Python inside
+Resolve. The output is a text file — diffable, versionable, revertable, readable
+before it touches a timeline.</p>
+
+<p>
+  <a class="cta" href="https://github.com/Egnatia-OC/otio-kit">Source &amp; docs →</a>
+  <a class="cta" href="https://pypi.org/project/otio-kit/">PyPI →</a>
+  <a class="cta" href="https://preview.mailerlite.io/forms/2642647/198988005317281408/share">Release updates →</a>
+</p>
+
+<h2>Verified, per Resolve build</h2>
+<p>Fidelity is the whole product, so it is recorded row by row — one row per
+(version × OS × edition), each with a reproduction path. This is the actual
+count; no "community-verified" label is used until there are independent rows.</p>
+<table>
+<thead><tr><th>Resolve</th><th>OS</th><th>Edition</th><th>Run</th><th>Result</th></tr></thead>
+<tbody>
+<tr><td>21.1.0.0017</td><td>Linux (Ubuntu 24.04)</td><td>Free</td><td>first-party, 2026-09-15</td><td><span class="pass">PASS</span> — frame-accurate cuts, dissolve, title, marker; no relink dialogs</td></tr>
+<tr><td>21.1.0.0017</td><td>Windows 10 (GTX 1650)</td><td>Free</td><td>independent control run, 2026-09-20/21</td><td><span class="pass">PASS</span> — frame-exact cuts, dissolve, title, marker, audio audible, stock-effect fade-in applied</td></tr>
+</tbody>
+</table>
+<p class="note">Not verified yet: macOS, and anything newer than 21.1 (21.1.2,
+21.2). A row gets added only after the import has actually been run on that
+build. If you test one, a
+<a href="https://github.com/Egnatia-OC/otio-kit/issues/new?template=fidelity-report.md">fidelity report</a>
+takes about ten minutes and becomes a cited row.</p>
+
+<h2>Quickstart</h2>
+<pre><code>pip install otio-kit          # Python 3.10+, pure Python, no Resolve needed to compile
+otio-kit compile brief.yaml -o timeline.otio
+otio-kit validate brief.yaml  # spec + media check, writes nothing</code></pre>
+
+<p>A brief is ~15 lines of YAML:</p>
+<pre><code>spec_version: 0
+name: specimen-60
+fps: 24
+media:
+  clip_a: media/clip_a_dnx.mov
+  clip_b: media/clip_b_dnx.mov
+  title:  media/title.png
+timeline:
+  video:
+    - track: V1
+      clips:
+        - media: clip_a
+          duration: 20.0
+        - media: clip_b
+          duration: 20.0
+          transition_in: {type: dissolve, duration: 1.0}
+    - track: V2
+      clips:
+        - media: title
+          duration: 5.0
+markers:
+  - {time: 10.0, color: blue, name: beat-1}</code></pre>
+
+<pre><code>$ otio-kit compile tests/golden/specimen60.yaml -o timeline.otio
+compiled 'specimen-60': 5 clips, 3 tracks -&gt; timeline.otio</code></pre>
+
+<h2>What v0 covers — and what it refuses</h2>
+<table>
+<thead><tr><th>In</th><th>Out (loud error, not silent misinterpretation)</th></tr></thead>
+<tbody>
+<tr>
+<td>Timeline name/fps; sequential clips with frame-exact durations; cross-dissolve between adjacent clips; stills on upper tracks; 8 stock marker colours; media manifest with compile-time existence check</td>
+<td>Custom effect schemas (fatal to the importer); bare relative media URLs on Linux; gaps/offset placement; speed changes; effects, grades, Fusion comps; dissolves that don't fit their clips</td>
+</tr>
+</tbody>
+</table>
+<p>Everything emitted is stock OTIO schema; project semantics ride in
+<code>metadata</code>. Durations are quantized to whole frames, so at 23.976 or
+29.97 fps the total can differ from the nominal duration by a few frames — that
+is the model, documented, not drift to paper over.</p>
+
+<h2>Why a file, not an API call</h2>
+<p>Even if scripting returns to Free, the file approach stands on its own. A
+mutating API call is invisible until you look at the result; a timeline file can
+be reviewed, diffed, committed, and regenerated. The compiler is deterministic:
+the same brief produces the same bytes.</p>
+
+<h2>Comparisons</h2>
+<ul>
+  <li><a href="autosubs-alternative.html">AutoSubs-style workflows after 21.1</a>
+      — what broke, what a file-based rebuild looks like, and the roadmap
+      (subtitle emission, local transcription) marked as planned, not shipped.</li>
+  <li><a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/console-status.md">Console status matrix</a>
+      — the first-party test of every Free 21.1 scripting surface (menu, socket,
+      console, macros), with the method on record.</li>
+  <li><a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/llm-baseline.md">LLM baseline</a>
+      — brief → spec on a 60-second specimen: four capable models, 5/5 cut points
+      within ±2 frames, single sample at temperature 0. A baseline, not a general
+      accuracy claim.</li>
+</ul>
+
+<h2>Status</h2>
+<p>Alpha, spec v0 frozen. CI runs ruff and pytest on Ubuntu and Windows, Python
+3.10 and 3.12. The committed test media are empty stubs: the golden suite proves
+emitter determinism; import fidelity is the Resolve runs above. AGPL-3.0, with
+commercial dual licensing on request. Not affiliated with or endorsed by
+Blackmagic Design.</p>
+
+<footer>
+  <a href="https://github.com/Egnatia-OC/otio-kit">github.com/Egnatia-OC/otio-kit</a> ·
+  <a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/fidelity-log.md">fidelity log</a> ·
+  <a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/fidelity-registry.md">registry</a> ·
+  <a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/spec-scope-v0.md">spec scope</a> ·
+  <a href="https://github.com/Egnatia-OC/otio-kit/blob/master/KNOWN-ISSUES.md">known issues</a>
+  <p>"DaVinci Resolve" is a trademark of Blackmagic Design Pty Ltd.</p>
+</footer>
+</body>
+</html>

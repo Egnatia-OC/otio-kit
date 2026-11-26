@@ -2,6 +2,8 @@
 
 ![ci](https://github.com/Egnatia-OC/otio-kit/actions/workflows/ci.yml/badge.svg)
 
+**[Project page](https://egnatia-oc.github.io/otio-kit/)** · [PyPI](https://pypi.org/project/otio-kit/)
+
 Compile timeline briefs into files that import cleanly into **DaVinci Resolve**
 — Free or Studio, on Windows, macOS, or Linux. No scripting bridge.
 
