@@ -1,0 +1,134 @@
+OPEN VENUES — PASTE FILE
+
+Each block sits between its own delimiter lines. Select from one delimiter to the next,
+paste, move on. Paragraphs are single lines on purpose: no reflow, no cleanup.
+
+TAGS ARE NOT PART OF THE PASTE. Set them in the UI where a venue has them.
+
+====================================================================
+1. awesome-davinci-resolve — FORM ANSWERS (one field per line)
+https://docs.google.com/forms/d/e/1FAIpQLSdpbb2pSkkbMkLUFJxnVvlaH-FyO8IMRVxVgL2Lh6okBAqe1Q/viewform
+====================================================================
+Tool/Resource Name: otio-kit
+
+Developer/Creator: Egnatia OC
+
+Category: Workflow & Integration Tools
+
+Source Type: Standalone
+
+OS compatibility: macOS, Windows, Linux
+
+Cost: Free
+
+Price: (leave empty)
+
+Website URL: https://github.com/Egnatia-OC/otio-kit
+
+DaVinci Resolve Version Required: 18.6+ (verified on 21.1)
+
+Description: Compiles a short YAML brief into a standard OTIO timeline and imports it into Resolve. Built for the case where scripting is not available: the compiler runs outside Resolve, needs only Python 3.10+, and writes a text file you can diff and commit. Cuts, cross-dissolves, stills on upper tracks and markers; import verified on Free 21.1 on Linux and Windows, with the build numbers and method published. Effects, grades and Fusion are deliberately out of scope until there is import evidence for them.
+
+====================================================================
+2. dev.to — BODY IS IN A SEPARATE FILE
+docs/launch/devto-post-paste.txt
+====================================================================
+Title: Resolve Free 21.1 removed Python scripting. Timeline files still work.
+Tags: python, video, opensource, davinciresolve
+Canonical: https://egnatia-oc.github.io/otio-kit/otio-import-troubleshooting.html
+
+====================================================================
+3. r/opensource — TITLE
+====================================================================
+otio-kit: compiling YAML briefs into DaVinci Resolve timelines, because scripting left the free version
+
+====================================================================
+3. r/opensource — BODY
+====================================================================
+DaVinci Resolve 21.1 moved Python scripting to Studio. On the free build, the Scripts menu loads nothing, the socket refuses connections, and the console is Lua-only and sandboxed. I tested all of it and published the matrix, then built around the one surface that did not change: file import.
+
+otio-kit compiles a short YAML brief into a standard OTIO timeline. Cuts, cross-dissolves, stills on upper tracks, markers, an audio bed. The compiler is 308 lines of Python, needs no Resolve install, and the output is a text file you can diff and commit. Import is verified on Free 21.1 on Linux and Windows, with build numbers and reproduction steps in a public registry. macOS is untested and labelled as such.
+
+The interesting part is the failure log: a custom OTIO effect schema makes the importer return an empty timeline with no error, and relative media paths misresolve on Linux. Both are now hard rules in the emitter.
+
+AGPL-3.0. Source and evidence: https://github.com/Egnatia-OC/otio-kit — write-up: https://egnatia-oc.github.io/otio-kit/
+
+Happy to answer anything about the import behaviour, and a report from a build I have not tested is genuinely more useful than a star.
+
+====================================================================
+4. r/LocalLLaMA — TITLE
+====================================================================
+Compiling prose briefs into video timelines with a local model: harness, numbers, and where it fails
+
+====================================================================
+4. r/LocalLLaMA — BODY
+====================================================================
+Not a video tool post exactly. I needed to turn a written edit brief into a structured timeline, and measured whether models can do it: brief plus JSON schema in, YAML spec out, compiled to a timeline file, diffed against a hand-made golden.
+
+Result on a 60 s / 3-track specimen, temperature 0, single sample: qwen3.8:27b local hit 5/5 cut points within ±2 frames, structure exact, 30 s wall, $0. Four cloud models matched it for $0.0009–0.0038 per brief. qwen3:0.6b failed the gate with invalid YAML, which is the point of the control.
+
+Files and harness: https://github.com/Egnatia-OC/otio-kit/tree/master/bench — full table: https://github.com/Egnatia-OC/otio-kit/blob/master/docs/llm-baseline.md
+
+Caveats I would insist on if someone else posted this: one sample per model, a well-structured brief, and a mandatory human review step. Real briefs are messier, and schema repair is the next engineering item. The target app is DaVinci Resolve, which is why the output is OTIO and not a render.
+
+====================================================================
+5. MASTODON — POST 1 (hashtags at the end)
+====================================================================
+DaVinci Resolve 21.1 moved Python scripting to Studio. Before you roll back to 21.0 or buy a licence: timeline files still import on Free. I tested every scripting surface, wrote down what is dead, and built a small compiler that turns a YAML brief into an OTIO timeline. Verified on Free 21.1, Linux and Windows. https://egnatia-oc.github.io/otio-kit/
+
+#DaVinciResolve #OpenTimelineIO #Python #opensource
+
+====================================================================
+5. MASTODON — POST 2
+====================================================================
+Imported a generated OTIO timeline into Resolve Free 21.1 today. Cuts land on the right frames, the dissolve holds, markers survive. No scripting, no Studio licence. 308 lines of Python and a public evidence log: https://github.com/Egnatia-OC/otio-kit
+
+#DaVinciResolve #OpenTimelineIO #Python
+
+====================================================================
+5. MASTODON — POST 3
+====================================================================
+Two things that silently break OTIO import into Resolve and cost me an afternoon: a custom effect schema (empty timeline, no error dialog) and relative media paths on Linux. Wrote both up: https://egnatia-oc.github.io/otio-kit/otio-import-troubleshooting.html
+
+#DaVinciResolve #OpenTimelineIO #videoediting
+
+====================================================================
+5. BLUESKY — SAME THREE, NO TAGS
+====================================================================
+DaVinci Resolve 21.1 moved Python scripting to Studio. Timeline files still import on Free. I tested every scripting surface, wrote down what is dead, and built a small compiler that turns a YAML brief into an OTIO timeline. Verified on Free 21.1, Linux and Windows. https://egnatia-oc.github.io/otio-kit/
+
+Imported a generated OTIO timeline into Resolve Free 21.1 today. Cuts land on the right frames, the dissolve holds, markers survive. No scripting, no Studio licence. https://github.com/Egnatia-OC/otio-kit
+
+Two things that silently break OTIO import into Resolve: a custom effect schema (empty timeline, no error dialog) and relative media paths on Linux. Both written up: https://egnatia-oc.github.io/otio-kit/otio-import-troubleshooting.html
+
+====================================================================
+6. BLACKMAGIC FORUM — TITLE
+====================================================================
+Scripting surfaces on Free 21.1, measured: menu, socket, console, macros
+
+====================================================================
+6. BLACKMAGIC FORUM — BODY
+====================================================================
+I tested the four scripting surfaces on DaVinci Resolve Free 21.1.0.0017 on Ubuntu 24.04. Posting the results because the failure modes are silent and easy to confuse with each other.
+
+1. Workspace > Scripts renders four submenus and loads nothing. Python files placed in the documented Utility path never appear, and no error is shown.
+
+2. Workspace > Console opens and executes Lua, and the resolve object is injected. There is no Python language selector on Free. The sandbox has no io, os.execute is nil, and bmd.writefile does not write.
+
+3. The external scripting connection on 127.0.0.1:1211 is refused with Resolve running and with it closed. DaVinciResolveScript ships in the app only and will not import from system Python.
+
+4. The documented Fusion macro trigger path (Tools > Macros) is not present in the 21.1 Fusion UI, so the Macros folder is unreachable regardless of its contents.
+
+Method: one machine, one build, every result reproduced in a live session. I did not test Studio and I am not claiming anything about other builds or platforms; Lua behaviour appears to differ between builds, so treat the console result as this build.
+
+File import is unaffected, which is the path I ended up using. The full matrix, with build numbers and the import results, is in a public log: https://github.com/Egnatia-OC/otio-kit/blob/master/docs/console-status.md
+
+====================================================================
+7. ALTERNATIVETO — DESCRIPTION
+====================================================================
+otio-kit compiles a short YAML brief into a standard OTIO timeline that imports into DaVinci Resolve, including the free edition. It is not a plugin: the compiler runs outside Resolve, needs only Python 3.10+, and writes a text file you can diff and commit. Cuts, cross-dissolves, stills on upper tracks and markers. Import verified on Free 21.1 on Linux and Windows; macOS and newer builds are untested. AGPL-3.0.
+
+====================================================================
+8. ORDER
+====================================================================
+Day 1: 1, 2, 5. Day 2: 3, Lemmy (post the dev.to link). Day 3: 4. Day 5: 6, 7.
