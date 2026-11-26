@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OTIO import failing in DaVinci Resolve — six causes and how to confirm each</title>
+<meta name="description" content="Empty timeline with no error, media offline, video with no picture, silent music, missing markers, fade not applied. Each failure I hit importing OTIO into Resolve Free 21.1, with the cause and the check that confirms it.">
+<style>
+:root { color-scheme: light dark; }
+body { font: 16px/1.65 system-ui, -apple-system, sans-serif; max-width: 46rem; margin: 0 auto; padding: 2.5rem 1.25rem 3rem; }
+h1 { font-size: 1.65rem; line-height: 1.3; margin: .35rem 0 1rem; }
+h2 { font-size: 1.05rem; margin-top: 2.2rem; margin-bottom: .6rem; padding-bottom: .35rem; border-bottom: 1px solid #8883; }
+h3 { font-size: .95rem; margin-bottom: .25rem; }
+.kicker { text-transform: uppercase; letter-spacing: .09em; font-size: .75rem; opacity: .65; margin: 0; }
+a { color: #0b5fff; }
+@media (prefers-color-scheme: dark) { a { color: #7fb0ff; } }
+code { font-size: .88em; background: #8882; padding: .1em .35em; border-radius: 4px; }
+pre { background: #8881; padding: .85rem 1rem; border-radius: 8px; overflow-x: auto; font-size: .84rem; }
+pre code { background: none; padding: 0; }
+.symptom { font-weight: 600; }
+.cause { border-left: 3px solid #0b5fff; border-radius: 0 6px 6px 0; background: #8881; padding: .65rem .9rem .65rem 1rem; font-size: .94rem; margin: .5rem 0 1rem; }
+.note { border-left: 3px solid #d97706; padding-left: 1rem; font-size: .93rem; }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .4rem .5rem; border-bottom: 1px solid #8883; vertical-align: top; }
+th { font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; opacity: .85; }
+footer { margin-top: 3rem; font-size: .85rem; opacity: .75; border-top: 1px solid #8884; padding-top: 1rem; }
+</style>
+</head>
+<body>
+<p class="kicker">otio-kit · import notes</p>
+<h1>Your OTIO file imports wrong into Resolve. Six causes, and the check that confirms each.</h1>
+
+<p>These are the failures I hit importing generated OTIO into <strong>Resolve Free
+21.1.0.0017</strong> on Ubuntu 24.04 and Windows 10, in the order they waste the most
+time. Every one is reproduced and written up in the
+<a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/fidelity-log.md">fidelity log</a>.
+Resolve's importer reports almost none of them: several fail <em>silently</em>, which is
+why they cost hours.</p>
+
+<p class="note">Scope: the causes below are established on Free 21.1 on the two
+platforms listed. Studio and other builds may behave differently. If you test one, the
+<a href="https://github.com/Egnatia-OC/otio-kit/issues/new?template=fidelity-report.md">report
+template</a> takes ten minutes and gets your build number into the
+<a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/fidelity-registry.md">registry</a>.</p>
+
+<h2>1. The timeline imports empty, with no error at all</h2>
+<p class="symptom">Symptom: a timeline appears with zero clips. No dialog, nothing in the
+import log, no clue.</p>
+<div class="cause"><strong>Cause:</strong> the file contains a custom OTIO schema Resolve
+does not know — for example an effect named <code>AudioFadeIn_1</code> instead of the
+stock <code>Effect.1</code>. Unknown schemas are treated as fatal. When it does surface,
+the message is the unhelpful <code>Import Log (Fatal) - failed to import OTIO
+timeline</code>.</div>
+<p><strong>Check:</strong> find every <code>OTIO_SCHEMA</code> in the file and confirm it
+is stock. Custom schemas usually come from a tool exporting its own effect objects.</p>
+<pre><code>grep -o '"OTIO_SCHEMA": *"[^"]*"' timeline.otio | sort -u</code></pre>
+<p>Anything not in the OpenTimelineIO schema set is your failure. The same file will also
+fail OpenTimelineIO's own deserializer, so a five-line Python check confirms it before you
+blame Resolve.</p>
+
+<h2>2. Every clip lands offline, or you get a relink dialog per clip</h2>
+<p class="symptom">Symptom: clips import but show as media offline, or a chain of "clips
+not yet found" dialogs.</p>
+<div class="cause"><strong>Cause:</strong> relative media URLs. On Linux the conform step
+misresolves them. It is filename/reel based, not just path based, so the file being on
+disk is not enough.</div>
+<p><strong>Fix:</strong> write absolute paths to media that exists at import time. If the
+timeline has to move between machines, rewrite the media references on the target machine
+before importing rather than relying on relative paths.</p>
+
+<h2>3. The clip imports, but there is no picture — audio only</h2>
+<p class="symptom">Symptom: the timeline is there, the audio plays (or meters move), the
+video is black.</p>
+<div class="cause"><strong>Cause:</strong> H.264/H.265 on Resolve <em>Free on Linux</em>.
+Those decoders are Studio-only on that platform. The container's AAC track parses, so the
+clip imports as audio-only and looks like a timeline bug.</div>
+<p><strong>Fix:</strong> transcode to DNxHR (SQ or HQ) before importing. The same clips
+import with full picture on Windows and macOS Free — this is a platform-scoped gap, not a
+file-format problem. If your file imported fine on Windows and looks broken on Linux, this
+is why.</p>
+
+<h2>4. The music bed is silent</h2>
+<p class="symptom">Symptom: the audio clip is present and placed correctly, but nothing is
+audible.</p>
+<div class="cause"><strong>Cause:</strong> AAC. Free Linux cannot decode it, so an
+<code>music.m4a</code>-style bed imports as a silent clip. No error is raised.</div>
+<p><strong>Fix:</strong> ship PCM/WAV-class audio for Linux targets. A WAV bed and AAC bed
+of the same content can look identical in the file and behave differently on the timeline.</p>
+
+<h2>5. A marker is missing</h2>
+<p class="symptom">Symptom: you emitted two markers, one imported.</p>
+<div class="cause"><strong>Cause:</strong> markers are clip-local in OTIO as Resolve
+imports it. A marker whose time falls outside the clip it is attached to is dropped, with
+no message.</div>
+<p><strong>Fix:</strong> attach each marker to the clip that actually spans its time, and
+keep marker times inside that clip's range. This is the same on Linux and Windows, so it
+is an emitter rule, not a platform quirk.</p>
+
+<h2>6. The audio fade-in is not applied</h2>
+<p class="symptom">Symptom: the clip imports with no fade handle and a flat waveform.</p>
+<div class="cause"><strong>Cause:</strong> a custom fade schema is either ignored or
+fatal (see cause 1). The representation that <em>is</em> recognized is the stock
+<code>Effect.1</code> schema with <code>effect_name: AudioFadeIn</code> and the duration
+in <code>parameters</code> as a <code>RationalTime</code>.</div>
+<p><strong>Status:</strong> verified applied on Free 21.1 on Windows (clip handle present,
+waveform ramping over the first two seconds). Unverified on Linux — the test machine has
+no audio path, so nothing there can confirm an applied fade. Do not read "it imported" as
+"it was applied".</p>
+
+<h2>Two smaller ones worth knowing</h2>
+<table>
+<thead><tr><th>Symptom</th><th>Cause</th></tr></thead>
+<tbody>
+<tr><td>Total duration is a few frames off</td><td>Durations are quantized per clip to whole frames. At 23.976 or 29.97 fps the sum drifts by a few frames over a minute. This is the model, not corruption.</td></tr>
+<tr><td>EDL imports but timing is rejected</td><td>"Failed to link … timecode extents do not match" means the pool has different media than the EDL describes. Also: CMX_3600 cannot carry a dissolve, stills and markers in one file — that is why OTIO is the primary format.</td></tr>
+</tbody>
+</table>
+
+<h2>Before you file it as a Resolve bug</h2>
+<p>Do these four checks in order. They separate emitter bugs from importer limits, and
+they are exactly what a useful report contains:</p>
+<ol>
+<li>List the distinct <code>OTIO_SCHEMA</code> values. Stock only?</li>
+<li>Are all media paths absolute and existing at import time?</li>
+<li>Is the platform Free-Linux, and is the footage H.264 or AAC?</li>
+<li>Do the markers sit inside the clip durations they are attached to?</li>
+</ol>
+
+<p>If all four pass and it still fails, that is a real finding — and the
+<a href="https://github.com/Egnatia-OC/otio-kit/issues/new?template=fidelity-report.md">fidelity
+report template</a> is the fastest way to get it into the record with the build number
+attached.</p>
+
+<footer>
+<a href="index.html">otio-kit</a> ·
+<a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/fidelity-log.md">fidelity log</a> ·
+<a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/spec-scope-v0.md">spec scope</a> ·
+<a href="https://github.com/Egnatia-OC/otio-kit/blob/master/docs/console-status.md">Free 21.1 console matrix</a>
+<p>Not affiliated with or endorsed by Blackmagic Design. "DaVinci Resolve" is a trademark of Blackmagic Design Pty Ltd.</p>
+</footer>
+</body>
+</html>
