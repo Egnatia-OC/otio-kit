@@ -1,7 +1,6 @@
 OPEN VENUES — PASTE FILE
 
-Each block sits between its own delimiter lines. Select from one delimiter to the next,
-paste, move on. Paragraphs are single lines on purpose: no reflow, no cleanup.
+Each block sits between its own delimiter lines. Select from one delimiter to the next, paste, move on. Paragraphs are single lines on purpose: no reflow, no cleanup.
 
 TAGS ARE NOT PART OF THE PASTE. Set them in the UI where a venue has them.
 
