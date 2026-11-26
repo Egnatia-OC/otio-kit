@@ -57,3 +57,43 @@ else is doing now that the old routes are gone.
   measurements are useful; that is a question people can answer.
 - Do not mention AI or LLMs in the intro. In these communities it invites a
   different conversation than the one you want.
+
+---
+
+# dev.to welcome thread
+
+dev.to runs a standing welcome thread where new accounts leave an intro comment. It is
+read by people who click through to your profile, so the value is a good first line and
+one link, not a pitch. Comments are short there; three sentences beats three paragraphs.
+Do not use hashtags in the comment (they do nothing here) and do not ask for follows.
+
+## A — after the article is published (use this one)
+
+Hi 👋 I'm [name]. I edit video and write Python that mostly runs outside the editor.
+
+I just published my first post: what I measured on DaVinci Resolve's free build after
+21.1 moved Python scripting to Studio, and the file-based workaround that still works.
+The short version is that the Scripts menu, the socket and the Python console are gone,
+but timeline import is not, so I built a compiler that writes OTIO instead of driving
+the app.
+
+Most of what I write is about checking things instead of assuming them. Happy to be
+here — a "verified on your build or it didn't happen" registry turned out to be the
+most useful part of the project.
+
+## B — if you post the intro before the article exists
+
+Hi 👋 I'm [name]. I edit video and write Python that mostly runs outside the editor.
+
+I am working on a small compiler that turns a written edit brief into a timeline file
+that imports into DaVinci Resolve, because 21.1 moved scripting to Studio and files were
+the one automation path left. First post about it is coming this week: the test matrix,
+including the parts that failed.
+
+Mostly here to read how other people handle the "it works on my machine" problem.
+
+## Optional closing line, either variant
+
+    First post: <dev.to article URL>
+
+One link, at the end, no anchor text games.
