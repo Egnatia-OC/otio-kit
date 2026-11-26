@@ -102,9 +102,9 @@ any of them, so the compiler rejects them with an error instead of emitting
 something that looks right and is not. A tool that silently produces a plausible
 wrong timeline is worse than one that refuses.
 
-The project is 308 lines of Python with a larger test file, AGPL-3.0, and the
-evidence trail is deliberately bigger than the code: a fidelity log, a per-build
-registry, and the console matrix above.
+The project is 308 lines of Python (excluding blanks and comments) and 319 lines of
+tests, AGPL-3.0, and the evidence trail is deliberately bigger than the code: a
+fidelity log, a per-build registry, and the console matrix above.
 
 If you import a generated OTIO into a build I have not tested, a report is more
 useful than a star — there is a ten minute template in the repo.
