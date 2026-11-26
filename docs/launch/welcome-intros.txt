@@ -1,0 +1,59 @@
+WELCOME / INTRODUCTION THREAD
+
+Two lengths. Use the short one in Discord #introductions and similar; the long one
+where an intro thread expects a paragraph. Neither opens with the project name: an
+introduction that starts with a product reads as an advert, and people stop reading
+at the first word they recognise as marketing.
+
+Rules applied here: no link unless the thread says links are welcome; no bullets; one
+concrete thing you did; one question or offer; your name if the community uses real
+names.
+
+---
+
+## Short (Discord, ~70 words)
+
+Hey, I'm [name]. I edit, and I write Python that mostly runs outside Resolve.
+
+Since 21.1 took Python scripting off the free build I have been measuring what is
+actually still alive in there: the Scripts menu, the external socket, the console.
+Wrote it all down, then built a small tool around the one path that survived, which
+is timeline files.
+
+Not here to spam it. If you are stuck on the same thing, ask me, I have probably
+already hit it.
+
+---
+
+## Long (forum, ~140 words)
+
+Hi, I'm [name]. I edit and I write Python, and the Python mostly runs outside Resolve.
+
+When 21.1 moved scripting to Studio I wanted to know exactly what was left on the
+free build, rather than reading the release notes and guessing. So I tested it: the
+Scripts menu loads nothing, the external socket refuses connections, and the console
+that remains is Lua-only and sandboxed. One machine, one build, method written down,
+and it is all public because "works for me" is not useful to anyone else.
+
+The thing that survived is file import, so I have been building around that: a small
+compiler that turns a written brief into an OTIO timeline you import like any other
+file. It runs on Linux and Windows, macOS is untested, and I say so.
+
+Happy to share the test notes if they are useful here, and curious what everyone
+else is doing now that the old routes are gone.
+
+---
+
+## If links are welcome, add one line only
+
+    Everything above, with the build numbers: https://egnatia-oc.github.io/otio-kit/
+
+## What not to do
+
+- Do not paste the same text into three servers in one evening. Write a fresh first
+  line each time; the rest can repeat.
+- Do not lead with "I built X". Lead with what you measured.
+- Do not ask for stars, tests, or feedback on the first message. Ask whether the
+  measurements are useful; that is a question people can answer.
+- Do not mention AI or LLMs in the intro. In these communities it invites a
+  different conversation than the one you want.

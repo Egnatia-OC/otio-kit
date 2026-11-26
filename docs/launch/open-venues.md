@@ -44,6 +44,21 @@ Description (one paragraph, fits the form):
 > Effects, grades and Fusion are deliberately out of scope until there is import
 > evidence for them.
 
+Exact answers for the form's controls (read from the form's own field definitions):
+
+| Field | Answer |
+|---|---|
+| Tool/Resource Name | otio-kit |
+| Developer/Creator | Egnatia OC |
+| Category (dropdown) | Workflow & Integration Tools |
+| Source Type (dropdown: OFX, DCTL, VST/AU, Script/Macro, Template/Macro, Workflow/Script, Standalone, Other) | Standalone — it is a CLI that runs outside Resolve, not a plugin or an in-app script |
+| OS compatibility (checkboxes) | macOS, Windows, Linux — this is where the compiler runs. Import is verified only on Free 21.1 Linux and Windows, and the description says so |
+| Cost (dropdown) | Free |
+| Price | leave empty (nothing to price) |
+| Website URL | https://github.com/Egnatia-OC/otio-kit |
+| DaVinci Resolve Version Required (free text) | 18.6+ (verified on 21.1) |
+| Reddit Username | your account, used internally, not published |
+
 PR alternative, exact line for the list (insert into "Workflow & Integration Tools",
 alphabetical position after "otio"-adjacent entries):
 
